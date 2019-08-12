@@ -55,7 +55,7 @@
         "dayjs": "^1.8.14",
         "echarts": "^4.2.1",
         "mainloop.js": "^1.0.4",
-        "mithril": "^2.0.0-rc.6",
+        "mithril": "2.0.3",
         "mobius1-selectr": "^2.4.12",
         "nouislider": "^13.1.5",
         "tabulator-tables": "^4.2.7"
