@@ -12,7 +12,7 @@ gem 'concurrent-ruby-ext', '~>1.1.5', require: false
 gem 'mongo', '~>2.8.0'
 gem 'oj', '~>3.7.12'
 gem 'parallel', '~>1.17.0'
-gem 'puma', '~>3.12.1'
+gem 'puma', '~>4.3.11'
 gem 'rack', '~>2.0.7'
 gem 'rake', '~>12.3.1'
 gem 'roda', '~>3.20.0'
