@@ -34,7 +34,7 @@ class Table {
             resizable: false,
             // editor: true,
             headerSort: false,
-            align: "center",
+            hozAlign: "center",
             width: 26,
             minWidth: 26,
             cellClick: (e, cell) => {
