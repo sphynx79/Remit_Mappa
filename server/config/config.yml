@@ -1,7 +1,7 @@
 # config/application.yml
 defaults: &defaults
   mapbox:
-    url: 'https://api.mapbox.com' 
+    url: 'https://api.mapbox.com'
     api_token: 'sk.eyJ1IjoiYnJvd3NlcmlubyIsImEiOiJjamEzdjBxOGM5Nm85MzNxdG9mOTdnaDQ0In0.tMMxfE2W6-WCYIRzBmCVKg'
 
 development:
@@ -18,7 +18,9 @@ production:
   <<: *defaults
   database:
     adress:
-      - '127.0.0.1:27030'
+      # - '192.168.100.4:27018'
+      - '10.240.53.95:27018'
+      # - '127.0.0.1:27030'
       # - '10.130.96.220:27018'
       # - '10.130.96.220:27019'
       # - '10.130.96.144:27018'

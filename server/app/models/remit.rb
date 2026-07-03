@@ -10,7 +10,7 @@ class Remit < Mongodb
     def refresh_cache(expiration_time: 240)
       # print "Refresh cache .......\n"
       @@expiration_time ||= expiration_time
-      around_before = 10 
+      around_before = 10
       around_after  = 10
       @@cache ||= Hash.new do |hash, key|
         # puts "did not find key #{key} in cache, fetch from db ..."
@@ -21,7 +21,7 @@ class Remit < Mongodb
       end
       Concurrent::Promise.new{refresh_cache_around_today}.then{delete_expired_key }.execute
     end
-    
+
     def refresh_cache_around_day(data: nil, keep_old: false, keep_day: false, around_before: 30, around_after: 30)
       # p "refresh cache aroud day => #{data}"
       step        = 1.0
@@ -72,9 +72,9 @@ class Remit < Mongodb
     def fetch_from_db(data)
       pipeline = set_pipeline_centrali(data)
       remit_result = client[:remit_centrali_last].aggregate(pipeline).allow_disk_use(true).to_a
-      if remit_result.empty? 
-        nil 
-      else 
+      if remit_result.empty?
+        nil
+      else
         remit_result[0]['entries']
           .yield_self { |remit| features_centrali(remit) }
           .yield_self { |features| Hash[type: 'FeatureCollection', features: features] }
@@ -101,7 +101,7 @@ class Remit < Mongodb
     end
 
     def features_centrali(remit_result)
-      # remit_result.map do |x|
+      #remit_result.map do |x|
       Parallel.map(remit_result, in_threads: 8) do |x|
         feature                            = {}
         etso                               = x['etso']
@@ -147,10 +147,10 @@ class Remit < Mongodb
     def set_pipeline_centrali(data)
       pipeline = []
 
-      pipeline << { 
+      pipeline << {
         "$match": { data: data}
-      } 
-    
+      }
+
       pipeline << {
         "$group": {
           _id: {

@@ -5,18 +5,18 @@ require 'childprocess'
 
 # Specifies the `port` that Puma will listen on to receive requests, default is 3000.
 #
-port 80
+#port 3000
 
-bind 'tcp://wpws07288419:443'
-bind 'tcp://wpws07288419:80'
+bind 'tcp://ENWS27719997:443'
+#bind 'tcp://ENWS27719997:3000'
 
-ssl_bind 'wpws07288419', '443', {
-  key: "./config/wpws07288419.key",
-  cert: "./config/wpws07288419.crt"
+ssl_bind 'ENWS27719997', '443', {
+  key: "./config/ENWS27719997.key",
+  cert: "./config/ENWS27719997.crt"
 }
 
 
-process = ChildProcess.build("caddy.exe", "-quiet", "-quic", "-conf", "CaddyfileProd_wpws07288419")
+process = ChildProcess.build('C:\APPL\caddy\caddy.exe', "-quiet", "-quic", "-conf", "CaddyfileProd_ENWS27719997")
 process.cwd = '.\config'
 process.io.inherit!
 process.leader = true

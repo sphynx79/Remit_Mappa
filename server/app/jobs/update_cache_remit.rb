@@ -15,9 +15,9 @@ class UpdateCacheRemit
 
   def init
     Concurrent::TimerTask.new(
-      run_now: true, 
-      execution_interval: @execution_interval, 
-      timeout_interval: @timeout_interval
+      run_now: true,
+      execution_interval: @execution_interval,
+      # timeout_interval: @timeout_interval
     ) do
       Remit.refresh_cache(expiration_time: @expiration_time)
       nil # no need for the {#Concurrent::TimerTask} to keep a reference to the value

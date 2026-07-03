@@ -4,7 +4,7 @@
 # frozen_string_literal: true
 
 class UpdateCacheUnits
-  attr_reader :name, :description, :time_interval 
+  attr_reader :name, :description, :time_interval
   def initialize
     @name = "cache_units"
     @description = "Update della cache delle unita"
@@ -14,9 +14,9 @@ class UpdateCacheUnits
 
   def init
     Concurrent::TimerTask.new(
-      run_now: true, 
-      execution_interval: @execution_interval, 
-      timeout_interval: @timeout_interval
+      run_now: true,
+      execution_interval: @execution_interval,
+      # timeout_interval: @timeout_interval
     ) do
       Units.refresh_cache
       nil # no need for the {#Concurrent::TimerTask} to keep a reference to the value

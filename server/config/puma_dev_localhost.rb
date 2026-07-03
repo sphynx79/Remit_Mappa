@@ -11,7 +11,7 @@ ssl_bind 'localhost', '443',
          key: './config/localhost.key',
          cert: './config/localhost.crt'
 
-process = ChildProcess.build('caddy.exe', '-quiet', '-quic', '-conf', 'CaddyfileDev')
+process = ChildProcess.build('C:\APPL\caddy\caddy.exe', '-quiet', '-quic', '-conf', 'CaddyfileDev')
 process.cwd = './config'
 process.io.inherit!
 process.leader = true
