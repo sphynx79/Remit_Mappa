@@ -1,16 +1,16 @@
-wpws07133656:2015 {
+ENWS27719997:2015 {
   root ..\public
   gzip {
     min_length 2500
   }
-  tls wpws07133656.crt wpws07133656.key
+  tls ENWS27719997.crt ENWS27719997.key
   index index.html
   push
 
   header / {
     Cache-Control "max-age=86400"
   }  
-  proxy /api wpws07133656:443 {
+  proxy /api ENWS27719997:443 {
     transparent
     insecure_skip_verify
     keepalive 10
