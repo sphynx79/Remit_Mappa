@@ -1,3 +1,18 @@
+## 1.7.0 (2026-07-03)
+### Updated
+-  Aggiornato server a Ruby 4.0.1  ( 2026-07-03 ) [ sphynx79]
+-  Aggiornato gemme server all'ultima versione: puma 8.0.2, rack 3.2.6, roda 3.105, oj 3.17.3, parallel 2.1, childprocess 5.1, rake 13.4.2  ( 2026-07-03 ) [ sphynx79]
+-  Driver mongo fermo a 2.23.1: la 2.24 richiede MongoDB server >= 4.2 (in uso 4.0.x)  ( 2026-07-03 ) [ sphynx79]
+-  Riattivate gemme di sviluppo (pry, byebug, rspec, rubocop, ...), esclusa pry-state incompatibile con pry moderno  ( 2026-07-03 ) [ sphynx79]
+-  Patch Settingslogic per psych >= 4 e header di risposta in minuscolo per Rack 3  ( 2026-07-03 ) [ sphynx79]
+-  Migrazione ai nuovi host ENWS26975477/ENWS27719997 (certificati, Caddyfile, config puma)  ( 2026-07-03 ) [ sphynx79]
+-  Aggiornato lato client a mithril@2.0.3 e mapbox, rigenerato bundle produzione  ( 2026-07-03 ) [ sphynx79]
+### Added
+-  Aggiunte gemme logger e fiddle, non piu default gem in Ruby 4  ( 2026-07-03 ) [ sphynx79]
+-  Configurazione tooling: mise, LSP, CLAUDE.md  ( 2026-07-03 ) [ sphynx79]
+
+
+
 ## 1.6.15 (2019-06-16)
 ### Updated
 -  Aggiornato lato client css-loader 2.1.1 => 3.0.0  ( 2019-06-16 ) [ sphynx79]
