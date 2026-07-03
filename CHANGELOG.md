@@ -5,6 +5,7 @@
 -  Driver mongo fermo a 2.23.1: la 2.24 richiede MongoDB server >= 4.2 (in uso 4.0.x)  ( 2026-07-03 ) [ sphynx79]
 -  Riattivate gemme di sviluppo (pry, byebug, rspec, rubocop, ...), esclusa pry-state incompatibile con pry moderno  ( 2026-07-03 ) [ sphynx79]
 -  Patch Settingslogic per psych >= 4 e header di risposta in minuscolo per Rack 3  ( 2026-07-03 ) [ sphynx79]
+-  Token Mapbox rimosso dal repository: letto dalla variabile d'ambiente MAPBOX_API_TOKEN via ERB  ( 2026-07-03 ) [ sphynx79]
 -  Migrazione ai nuovi host ENWS26975477/ENWS27719997 (certificati, Caddyfile, config puma)  ( 2026-07-03 ) [ sphynx79]
 -  Aggiornato lato client a mithril@2.0.3 e mapbox, rigenerato bundle produzione  ( 2026-07-03 ) [ sphynx79]
 ### Added

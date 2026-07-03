@@ -2,7 +2,8 @@
 defaults: &defaults
   mapbox:
     url: 'https://api.mapbox.com'
-    api_token: 'sk.eyJ1IjoiYnJvd3NlcmlubyIsImEiOiJjamEzdjBxOGM5Nm85MzNxdG9mOTdnaDQ0In0.tMMxfE2W6-WCYIRzBmCVKg'
+    # il token NON va committato: si legge dalla variabile d'ambiente (setx MAPBOX_API_TOKEN "...")
+    api_token: <%= ENV.fetch('MAPBOX_API_TOKEN') %>
 
 development:
   <<: *defaults
