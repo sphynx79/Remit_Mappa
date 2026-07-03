@@ -4,7 +4,6 @@ var webpack = require("webpack")
 
 module.exports = {
     context: resolve(__dirname, "src"),
-    // entry: ["regenerator-runtime/runtime", "./pack/application.js"],
     entry: ["./pack/application.js"],
     output: {
         path: resolve(__dirname, "dist/"),
@@ -17,67 +16,40 @@ module.exports = {
             components: resolve(__dirname, "src/components"),
             "mithril/stream": resolve(__dirname, "node_modules/mithril/stream/stream.js"),
             mithril: resolve(__dirname, "node_modules/mithril/mithril.js"),
-            // carbon_component: resolve(__dirname, "node_modules_custom/carbon-components/es/components"),
         },
-        // modules: [ resolve(__dirname, 'node_modules/') ]
     },
     module: {
         rules: [
             {
-                test: /\.html$/,
+                // selectr è un UMD che in webpack prenderebbe il ramo AMD: disabilito define e lego this a window
+                test: /mobius1-selectr[\\/]dist[\\/]selectr\.min\.js$/,
                 use: [
                     {
-                        loader: "html-loader",
+                        loader: "imports-loader",
                         options: {
-                            minimize: true,
-                            interpolate: true,
+                            wrapper: "window",
+                            additionalCode: "var define = false;",
                         },
                     },
                 ],
             },
             {
                 test: /.(ttf|otf|eot|woff(2)?)(\?[a-z0-9]+)?$/,
-                loader: "file-loader",
-                options: {
-                    name: "[name].[ext]",
-                    publicPath: "../fonts/", // override the default path
-                    outputPath: "fonts/",
-                    limit: 10 * 1024,
+                type: "asset/resource",
+                generator: {
+                    filename: "fonts/[name][ext]",
+                    // il css finisce in css/, i font vanno raggiunti con ../fonts/
+                    publicPath: "../",
                 },
             },
             {
                 test: /\.(png|jpg|svg|gif|ico)$/,
-                loader: "file-loader",
-                options: {
-                    name: "[name].[ext]",
-                    publicPath: "../images/",
-                    outputPath: "images/",
+                type: "asset/resource",
+                generator: {
+                    filename: "images/[name][ext]",
+                    publicPath: "../",
                 },
             },
-            // {
-            //     test: /\.js$/,
-            //     exclude: /node_modules/,
-            //     use: {
-            //         loader: "babel-loader",
-            //         options: {
-            //             presets: [
-            //                 [
-            //                     "@babel/preset-env",
-            //                     {
-            //                         targets: {
-            //                             browsers: ["last 2 versions", "IE 10"],
-            //                         },
-            //                         modules: false,
-            //                         debug: true,
-            //                         // useBuiltins: "usage",
-            //                         // exclude: ["transform-regenerator"],
-            //                     },
-            //                 ],
-            //             ],
-            //             plugins: ["module:mopt"],
-            //         },
-            //     },
-            // },
         ],
     },
     plugins: [
@@ -90,10 +62,6 @@ module.exports = {
             derive: ["derivable", "derive"],
             atom: ["derivable", "atom"],
             lens: ["derivable", "lens"],
-            // PubSubEs6: 'pub-sub-es6',
-            // dispatch: ['pub-sub-es6', 'dispatch'],
-            // receive: ['pub-sub-es6', 'receive'],
-            // on: ['pub-sub-es6', 'on']
         }),
     ],
 }

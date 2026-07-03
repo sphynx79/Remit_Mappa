@@ -38,7 +38,7 @@
     @supports ( (-webkit-backdrop-filter: none) or (backdrop-filter: none) ) {
       border: 1.5px solid #20343e;
     }
-    @supports ( not ( (-webkit-backdrop-filter: none) or (backdrop-filter: none) ) ) {
+    @supports not ((-webkit-backdrop-filter: none) or (backdrop-filter: none)) {
           box-shadow: rgba(0, 0, 0, 0.39) -3px 2px 2px 0px;
     }
 }

@@ -13,7 +13,7 @@ class DataPicker {
     }
 
     oninit({ state }) {
-        appState.$data.react((data) => {
+        appState.$data.react(data => {
             let urlLinee220 = `${appState.protocolo}://${appState.server}:${appState.port}/api/v1/remits/${data}/linee/220`
             let urlLinee380 = `${appState.protocolo}://${appState.server}:${appState.port}/api/v1/remits/${data}/linee/380`
             let urlCentrali = `${appState.protocolo}://${appState.server}:${appState.port}/api/v1/remits/${data}/centrali`

@@ -5,7 +5,8 @@
 // @import '~@ibm/plex/scss/sans/regular/_latin1.scss';
 $font-path: '~carbon-components/src/globals/fonts';
 // $font-path: 'https://cdn.jsdelivr.net/npm/@ibm/type@0.5.4/fonts/Sans/web/woff2/';
-@import "./node_modules_custom/carbon-components/scss/globals/scss/styles";
+// dart-sass risolve i path relativi al file, non alla cwd come faceva node-sass
+@import "../../node_modules_custom/carbon-components/scss/globals/scss/styles";
 
 html {
   font-size: calc(0.4em + 1vmin);

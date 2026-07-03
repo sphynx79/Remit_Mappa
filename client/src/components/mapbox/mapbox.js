@@ -116,12 +116,12 @@ class MapBox {
 
                     // Usa fitBounds per ottenere le coordinate del centro e il livello di zoom
                     let fitBoundsOptions = {
-                        padding: {top: 10, bottom: 25, left: 15, right: 5}, // Opzioni di padding
-                        maxZoom: 10 // Zoom massimo
-                    };
+                        padding: { top: 10, bottom: 25, left: 15, right: 5 }, // Opzioni di padding
+                        maxZoom: 10, // Zoom massimo
+                    }
 
                     // Ottieni i parametri dal metodo fitBounds
-                    let camera = map.cameraForBounds(bounds, fitBoundsOptions);
+                    let camera = map.cameraForBounds(bounds, fitBoundsOptions)
 
                     // Usa flyTo per fare il fly su questa area
                     map.flyTo({
@@ -134,9 +134,9 @@ class MapBox {
                         duration: 2000,
                         essential: true,
                         easing: function (t) {
-                            return t;
-                        }
-                    });
+                            return t
+                        },
+                    })
 
                     // map.fitBounds(bounds, {
                     //     padding: 200,
@@ -150,26 +150,7 @@ class MapBox {
                     if (popUps[0]) popUps[0].remove()
                     let popup = new mapboxgl.Popup()
                         .setLngLat(coordinates[midle])
-                        .setHTML(
-                            "<b>" +
-                                feature.nome +
-                                "</b><br>" +
-                                "<b>" +
-                                "update: " +
-                                "</b>" +
-                                feature.update +
-                                "<br>" +
-                                "<b>" +
-                                "start: " +
-                                "</b>" +
-                                feature.start +
-                                "<br>" +
-                                "<b>" +
-                                "end:  " +
-                                "</b>" +
-                                feature.end +
-                                "<br>"
-                        )
+                        .setHTML("<b>" + feature.nome + "</b><br>" + "<b>" + "update: " + "</b>" + feature.update + "<br>" + "<b>" + "start: " + "</b>" + feature.start + "<br>" + "<b>" + "end:  " + "</b>" + feature.end + "<br>")
                         .addTo(map)
                 }
             },
@@ -211,7 +192,7 @@ class MapBox {
                     curve: 1.1,
                     duration: 2000,
                     essential: true,
-                    easing: function(t) {
+                    easing: function (t) {
                         return t
                     },
                 })
@@ -283,7 +264,15 @@ class MapBox {
     }
 
     initAnimation() {
-        let dashArraySeq = [[0, 4, 3], [1, 4, 2], [2, 4, 1], [3, 4, 0], [0, 1, 3, 3], [0, 2, 3, 2], [0, 3, 3, 1]]
+        let dashArraySeq = [
+            [0, 4, 3],
+            [1, 4, 2],
+            [2, 4, 1],
+            [3, 4, 0],
+            [0, 1, 3, 3],
+            [0, 2, 3, 2],
+            [0, 3, 3, 1],
+        ]
         let dashSpeed = 100
         let dashArrayPos = 0
         let dashArraylastPos = 0
@@ -330,9 +319,7 @@ class MapBox {
         }
         MainLoop.setSimulationTimestep(70)
         // MainLoop.setMaxAllowedFPS(20)
-        MainLoop.setUpdate(update)
-            .setDraw(draw)
-            .start()
+        MainLoop.setUpdate(update).setDraw(draw).start()
     }
 
     addLayerRemitLinee(volt) {
@@ -358,7 +345,10 @@ class MapBox {
                 "line-opacity": 1,
                 "line-width": {
                     base: 1,
-                    stops: [[6, 2], [14, 3]],
+                    stops: [
+                        [6, 2],
+                        [14, 3],
+                    ],
                 },
                 "line-dasharray": [0, 4, 3],
             },
@@ -371,7 +361,15 @@ class MapBox {
             base: 1,
             type: "categorical",
             property: "tipo",
-            stops: [["TERMICO", "#E0090C"], ["EOLICO", "#5907AB"], ["IDRICO", "#04A1A1"], ["AUTOPRODUTTORE", "#9E577C"], ["SOLARE", "#9E4F0B"], ["POMPAGGIO", "#0E952F"], ["GEOTERMICO", "#7E4F21"]],
+            stops: [
+                ["TERMICO", "#E0090C"],
+                ["EOLICO", "#5907AB"],
+                ["IDRICO", "#04A1A1"],
+                ["AUTOPRODUTTORE", "#9E577C"],
+                ["SOLARE", "#9E4F0B"],
+                ["POMPAGGIO", "#0E952F"],
+                ["GEOTERMICO", "#7E4F21"],
+            ],
         }
 
         map.addSource("remit_centrali", {
@@ -484,10 +482,13 @@ class MapBox {
             filter: ["==", "nome", ""],
         })
 
-        map.on("mouseover", layer, function(e) {
+        map.on("mouseover", layer, function (e) {
             // if (!map.loaded()) return
             map.getCanvas().style.cursor = "pointer"
-            var bbox = [[e.point.x - 5, e.point.y - 5], [e.point.x + 5, e.point.y + 5]]
+            var bbox = [
+                [e.point.x - 5, e.point.y - 5],
+                [e.point.x + 5, e.point.y + 5],
+            ]
             var features = map.queryRenderedFeatures(bbox, {
                 layers: [layer],
             })
@@ -503,7 +504,7 @@ class MapBox {
             }
         })
 
-        map.on("mouseout", layer, function() {
+        map.on("mouseout", layer, function () {
             map.getCanvas().style.cursor = ""
             map.setFilter(idLayer, ["==", "nome", ""])
         })
@@ -525,8 +526,11 @@ class MapBox {
         }
         // console.log(layer)
 
-        map.on("click", function(e) {
-            var bbox = [[e.point.x - 2, e.point.y - 2], [e.point.x + 2, e.point.y + 2]]
+        map.on("click", function (e) {
+            var bbox = [
+                [e.point.x - 2, e.point.y - 2],
+                [e.point.x + 2, e.point.y + 2],
+            ]
 
             var features = map.queryRenderedFeatures(bbox, {
                 layers: [layer], // replace this with the name of the layer
@@ -549,7 +553,7 @@ class MapBox {
 
         function setContentPopUp(feature) {
             // prettier-ignore
-            /* eslint-disable no-alert, no-console */
+
             if (feature.layer.id == "centrali") {
                 var content = "<b>" + feature.properties.etso + "</b><br>" +
                               "<b>" + "Company: " + "</b>" + feature.properties.company + "<br>" +
@@ -573,7 +577,6 @@ class MapBox {
 
             return content
         }
-        /* eslint-enable no-alert */
     }
 
     view({ attrs }) {

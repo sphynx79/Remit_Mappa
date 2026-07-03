@@ -1,7 +1,8 @@
 // src/components/select/select.js
 
 import "./select.scss"
-const Selectr = require("imports-loader?this=>window,define=>false!mobius1-selectr/dist/selectr.min.js")
+// il wrapping UMD di selectr viene forzato in CommonJS dalla rule imports-loader in webpack.common.js
+const Selectr = require("mobius1-selectr")
 
 class Select {
     constructor() {
