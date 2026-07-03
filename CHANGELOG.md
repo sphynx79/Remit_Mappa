@@ -1,3 +1,20 @@
+## 1.8.0 (2026-07-03)
+### Updated
+-  Migrato client a webpack 5.108 su Node 24.16 (webpack-cli 7, webpack-dev-server 5.2, webpack-merge 6)  ( 2026-07-03 ) [ sphynx79]
+-  Sostituito node-sass (morto su Node 24) con dart-sass 1.101 + sass-loader 17, css-loader 7, postcss 8, autoprefixer 10  ( 2026-07-03 ) [ sphynx79]
+-  Sostituiti plugin webpack defunti: extract-css-chunks => mini-css-extract-plugin, optimize-css-assets+cssnano => css-minimizer, file-loader => asset modules, clean-webpack-plugin => output.clean  ( 2026-07-03 ) [ sphynx79]
+-  Aggiornato lato client tabulator-tables 4.9 => 6.5 (TabulatorFull, rowClick a evento, columnDefaults, normalizeHeight per riga ore)  ( 2026-07-03 ) [ sphynx79]
+-  Aggiornato lato client echarts 4.9 => 6.1 (rimossi wrapper normal:, barBorder* => border*)  ( 2026-07-03 ) [ sphynx79]
+-  Aggiornato lato client nouislider 13 => 15.8, mithril => 2.3.8, dayjs => 1.11.21  ( 2026-07-03 ) [ sphynx79]
+-  Aggiornato mapbox-gl da CDN a 3.25.0 (dev era fermo a 1.1.1)  ( 2026-07-03 ) [ sphynx79]
+-  Aggiornato eslint 5 => 10 con flat config e prettier 1 => 3 (arrowParens avoid per stile esistente)  ( 2026-07-03 ) [ sphynx79]
+-  carbon-components fermo a 9.91.5: copia SCSS personalizzata basata su v9, la v11 cambia tutti i class name  ( 2026-07-03 ) [ sphynx79]
+-  Fix SCSS per dart-sass: sintassi @supports, stringa multilinea nel carbon custom, path relativi al file  ( 2026-07-03 ) [ sphynx79]
+-  Rimosso peso morto dal build: babel (regola disattivata da anni), core-js, regenerator-runtime, mopt, eslint-loader, style-loader, webpack.watch.js, yarn.lock  ( 2026-07-03 ) [ sphynx79]
+-  Rigenerato bundle di produzione in server/public  ( 2026-07-03 ) [ sphynx79]
+
+
+
 ## 1.7.0 (2026-07-03)
 ### Updated
 -  Aggiornato server a Ruby 4.0.1  ( 2026-07-03 ) [ sphynx79]
