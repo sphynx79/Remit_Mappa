@@ -114,10 +114,34 @@ class MapBox {
                     }
                     let bounds = new mapboxgl.LngLatBounds(sw, ne)
 
-                    map.fitBounds(bounds, {
-                        padding: 200,
-                        maxZoom: 10,
-                    })
+                    // Usa fitBounds per ottenere le coordinate del centro e il livello di zoom
+                    let fitBoundsOptions = {
+                        padding: {top: 10, bottom: 25, left: 15, right: 5}, // Opzioni di padding
+                        maxZoom: 10 // Zoom massimo
+                    };
+
+                    // Ottieni i parametri dal metodo fitBounds
+                    let camera = map.cameraForBounds(bounds, fitBoundsOptions);
+
+                    // Usa flyTo per fare il fly su questa area
+                    map.flyTo({
+                        center: camera.center,
+                        zoom: camera.zoom,
+                        bearing: camera.bearing,
+                        pitch: camera.pitch,
+                        speed: 1.2, // Velocità di transizione
+                        curve: 1.42, // Curvatura della traiettoria di volo
+                        duration: 2000,
+                        essential: true,
+                        easing: function (t) {
+                            return t;
+                        }
+                    });
+
+                    // map.fitBounds(bounds, {
+                    //     padding: 200,
+                    //     maxZoom: 10,
+                    // })
                 }
 
                 function showPopUp() {
@@ -162,6 +186,8 @@ class MapBox {
                     zoom: 12,
                     speed: 1.7,
                     curve: 1.2,
+                    duration: 2000,
+                    essential: true,
                     easing(t) {
                         return t
                     },
@@ -172,7 +198,7 @@ class MapBox {
     }
 
     handleResetZoom() {
-        let el = document.querySelector("button.mapboxgl-ctrl-icon.mapboxgl-ctrl-compass")
+        let el = document.querySelector("div.mapboxgl-ctrl-bottom-right > div.mapboxgl-ctrl.mapboxgl-ctrl-group > button.mapboxgl-ctrl-compass")
         el.addEventListener(
             "click",
             () => {
@@ -183,6 +209,8 @@ class MapBox {
                     pitch: 0,
                     speed: 1.2,
                     curve: 1.1,
+                    duration: 2000,
+                    essential: true,
                     easing: function(t) {
                         return t
                     },
@@ -190,6 +218,41 @@ class MapBox {
             },
             false
         )
+        // const start = {
+        //     center: [11.88, -72.13],
+        //     zoom: 3,
+        //     bearing: 0,
+        //     pitch: 63,
+        // };
+        // const end = {
+        //     center: [11.88, 42.13],
+        //     zoom: 5.6,
+        //     bearing: 0,
+        //     pitch: 0
+        // };
+
+        // let isAtStart = true;
+
+        // el.addEventListener(
+        //     "click",
+        //     () => {
+        //     const target = isAtStart ? end : start;
+        //     isAtStart = !isAtStart;
+        //     map.flyTo({
+        //         ...target, // Fly to the selected target
+        //         // duration: 12000, // Animate over 12 seconds
+        //         essential: true, // This animation is considered essential with
+        //         curve: 1.42,
+        //         speed: 0.3,
+        //         easing: function(t) {
+        //             return t
+        //         },
+        //         //respect to prefers-reduced-motion
+        //     });
+
+        //     },
+        //     false
+        // )
     }
 
     initMap() {
@@ -205,7 +268,6 @@ class MapBox {
         })
         let nav = new mapboxgl.NavigationControl()
         map.addControl(nav, "bottom-right")
-        // map.addControl(new mapboxgl.FullscreenControl());
     }
 
     initRemit() {

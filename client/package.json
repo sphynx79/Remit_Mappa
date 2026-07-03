@@ -58,7 +58,7 @@
         "mithril": "2.0.3",
         "mobius1-selectr": "^2.4.12",
         "nouislider": "^13.1.5",
-        "tabulator-tables": "^4.2.7"
+        "tabulator-tables": "4.9.3"
     },
     "browserslist": [
         "> 1%",
