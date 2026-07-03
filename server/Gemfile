@@ -2,24 +2,28 @@
 # warn_indent: true
 # frozen_string_literal: true
 
-ruby '>=2.6.3'
+ruby '>=4.0.1'
 
 source 'https://rubygems.org'
 
 # gem 'caddy', '~>1.6.0'
-gem 'childprocess', '~>1.0.1'
-gem 'concurrent-ruby-ext', '~>1.1.5', require: false
-gem 'mongo', '~>2.8.0'
-gem 'oj', '~>3.7.12'
-gem 'parallel', '~>1.17.0'
-gem 'puma', '~>3.12.1'
-gem 'rack', '~>2.0.7'
-gem 'rake', '~>12.3.1'
-gem 'roda', '~>3.20.0'
+gem 'childprocess', '~>5.1.0'
+gem 'concurrent-ruby-ext', '~>1.3.7', require: false
+# logger: da Ruby 4.0 non è piu una default gem, sotto Bundler va dichiarata
+gem 'logger', '~>1.7'
+# mongo: fermo alla 2.23 perche la 2.24 richiede MongoDB server >= 4.2 (wire version 8),
+# mentre il server in uso è MongoDB 4.0.x (wire version 7)
+gem 'mongo', '~>2.23.1'
+gem 'oj', '~>3.17.3'
+gem 'parallel', '~>2.1.0'
+gem 'puma', '~>8.0.2'
+gem 'rack', '~>3.2.6'
+gem 'rake', '~>13.4.2'
+gem 'roda', '~>3.105.0'
 gem 'ruby-time_range', require: 'time_range'
 gem 'settingslogic', '~>2.0.9'
 gem 'tzinfo', '~>2.0'
-gem 'tzinfo-data', '~>1.2018.7'
+gem 'tzinfo-data', '~>1.2026.2'
 # gem 'ruby-prof'
 # gem 'brotli'
 # gem 'rack-brotli'
@@ -29,21 +33,24 @@ group :production do
 end
 
 group :development, :test do
-  gem 'awesome_print', '~>1.8.0'
-  gem 'byebug', '~>11.0.1'
-  gem 'colorize', '~>0.8.1'
-  gem 'ffi', '~>1.11.1'
+  gem 'awesome_print', '~>1.9.2'
+  gem 'byebug', '~>13.0'
+  gem 'colorize', '~>1.1.0'
+  # fiddle: da Ruby 4.0 non è piu una default gem, serve a reline (byebug/pry) su Windows
+  gem 'fiddle', '~>1.1'
+  gem 'ffi', '~>1.17'
   gem 'hirb', '~>0.7.3'
-  gem 'looksee', '~>4.1.0'
-  gem 'pry', '~>0.12.2'
+  gem 'looksee', '~>5.1.0'
+  gem 'pry', '~>0.16.0'
   gem 'pry-bond', '~>0.0.1'
-  gem 'pry-byebug', '~>3.7.0'
+  gem 'pry-byebug', '~>3.12.0'
   gem 'pry-clipboard', '~>0.1.1'
-  gem 'pry-state', '~>0.1.10'
-  gem 'rspec', '~>3.8.0'
-  gem 'rubocop', '~>0.70.0', require: false
-  gem 'rubocop-performance', '~>1.3.0', require: false
-  gem 'rufo', '~>0.7', require: false
+  # pry-state richiede pry < 0.12, incompatibile con pry moderno
+  # gem 'pry-state', '~>0.1.10'
+  gem 'rspec', '~>3.13'
+  gem 'rubocop', '~>1.88', require: false
+  gem 'rubocop-performance', '~>1.26', require: false
+  gem 'rufo', '~>0.18', require: false
 end
 
 group :test do

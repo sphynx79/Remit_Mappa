@@ -52,7 +52,8 @@ class Server < Roda
     # use Rack::Cache, verbose: false
     # use Rack::Brotli, :if => lambda { |env, status, headers, body| headers["Content-Length"].to_i > 3600 }
     # IMPORTANTE: Uso deflate al posto di brotli perchè dai test mi e risultava piu performante
-    use Rack::Deflater, if: ->(_env, _status, headers, _body) { headers['Content-Length'].to_i > 3600 }
+    # Rack 3: gli header di risposta sono in minuscolo
+    use Rack::Deflater, if: ->(_env, _status, headers, _body) { headers['content-length'].to_i > 3600 }
     # use Rack::RubyProf, :path => 'profile', :printers => [::RubyProf::CallTreePrinter]
     # set :public_folder, 'public'
   end
@@ -70,3 +71,5 @@ class Server < Roda
     end
   end
 end
+
+
