@@ -1,8 +1,7 @@
-const merge = require("webpack-merge")
+const { merge } = require("webpack-merge")
 const webpack = require("webpack")
-const ExtractCssChunks = require("extract-css-chunks-webpack-plugin")
-const OptimizeCSSAssetsPlugin = require("optimize-css-assets-webpack-plugin")
-const { CleanWebpackPlugin } = require("clean-webpack-plugin")
+const MiniCssExtractPlugin = require("mini-css-extract-plugin")
+const CssMinimizerPlugin = require("css-minimizer-webpack-plugin")
 const CompressionPlugin = require("compression-webpack-plugin")
 const common = require("./webpack.common.js")
 const HtmlWebPackPlugin = require("html-webpack-plugin")
@@ -10,16 +9,28 @@ const TerserPlugin = require("terser-webpack-plugin")
 
 module.exports = merge(common, {
     mode: "production",
+    output: {
+        clean: true,
+    },
     module: {
-        noParse: /(mapbox-gl)\.js$/,
         rules: [
             {
                 test: /(\.css|\.scss)$/,
                 use: [
-                    ExtractCssChunks.loader,
+                    MiniCssExtractPlugin.loader,
                     { loader: "css-loader", options: { sourceMap: false } },
                     { loader: "postcss-loader", options: { sourceMap: false } },
-                    { loader: "sass-loader", options: { sourceMap: false } },
+                    {
+                        loader: "sass-loader",
+                        options: {
+                            sourceMap: false,
+                            sassOptions: {
+                                // il carbon v9 custom usa sintassi scss vecchia: zittisco le deprecation di dart-sass
+                                quietDeps: true,
+                                silenceDeprecations: ["import", "global-builtin", "color-functions", "slash-div", "if-function", "new-global"],
+                            },
+                        },
+                    },
                 ],
             },
         ],
@@ -45,10 +56,21 @@ module.exports = merge(common, {
         minimizer: [
             new TerserPlugin({
                 parallel: true,
-                sourceMap: false,
                 extractComments: false,
                 terserOptions: {
-                    ecma: 8,
+                    ecma: 2017,
+                },
+            }),
+            new CssMinimizerPlugin({
+                minimizerOptions: {
+                    preset: [
+                        "default",
+                        {
+                            discardComments: {
+                                removeAll: true,
+                            },
+                        },
+                    ],
                 },
             }),
         ],
@@ -62,21 +84,10 @@ module.exports = merge(common, {
         new webpack.DefinePlugin({
             NEXT: JSON.stringify(process.env.next),
         }),
-        new OptimizeCSSAssetsPlugin({
-            cssProcessor: require("cssnano"),
-            cssProcessorOptions: {
-                discardComments: {
-                    removeAll: true,
-                },
-            },
-            canPrint: true,
-        }),
-        new CleanWebpackPlugin(),
-        new ExtractCssChunks({
+        new MiniCssExtractPlugin({
             filename: "css/[name].css",
         }),
         new CompressionPlugin({
-            // asset: "[path].gz[query]",
             algorithm: "gzip",
             test: /\.js$|\.css$/,
             threshold: 10240,

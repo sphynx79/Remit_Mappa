@@ -1,7 +1,7 @@
 // src/components/table/table.js
 
 import "./table.scss"
-import Tabulator from "tabulator-tables"
+import { TabulatorFull as Tabulator } from "tabulator-tables"
 
 class Table {
     constructor() {
@@ -46,6 +46,8 @@ class Table {
                     cell.getRow().getElement().lastElementChild.style.display = ""
                 }
                 cell.setValue(!cellValue, true)
+                // Tabulator 5+: l'altezza della riga va ricalcolata dopo aver mostrato/nascosto la riga delle ore
+                cell.getRow().normalizeHeight()
             },
             formatter: (cell, formatterParams, onRendered) => {
                 if (cell.getValue() == true) {
@@ -122,23 +124,30 @@ class Table {
         vnode.state.tabulator = new Tabulator(el, {
             // height: "210px",
             layout: "fitColumns",
-            resizableColumns: false,
+            // Tabulator 5+: le opzioni di colonna a livello tabella stanno in columnDefaults
+            columnDefaults: {
+                resizable: false,
+            },
             // minHeight: 40,
             // maxHeight: 40,
             // data: vnode.state.tableData,
             placeholder: "No Data Set",
             columns: this._columns(),
             rowFormatter: row => this._formatRow(row),
-            rowClick: (e, row) => this._rowClick(e, row),
         })
 
-        vnode.attrs.remit.react(r => {
-            let remit = vnode.attrs.type == "linee" ? r.features : r
-            let propAndGeometry = remit.map(item => {
-                let merged = { ...item["properties"], ...{ geometry: item["geometry"] } }
-                return merged
+        // Tabulator 5+: rowClick è un evento, e setData è permesso solo a tabella costruita
+        vnode.state.tabulator.on("rowClick", (e, row) => this._rowClick(e, row))
+
+        vnode.state.tabulator.on("tableBuilt", () => {
+            vnode.attrs.remit.react(r => {
+                let remit = vnode.attrs.type == "linee" ? r.features : r
+                let propAndGeometry = remit.map(item => {
+                    let merged = { ...item["properties"], ...{ geometry: item["geometry"] } }
+                    return merged
+                })
+                this.tabulator.setData(propAndGeometry)
             })
-            this.tabulator.setData(propAndGeometry)
         })
 
         document.addEventListener("content-switcher-selected", evt => {

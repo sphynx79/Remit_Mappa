@@ -31,10 +31,10 @@ class Slider {
                 stepped: true,
             },
             format: {
-                to: function(value) {
+                to: function (value) {
                     return parseInt(value)
                 },
-                from: function(value) {
+                from: function (value) {
                     return parseInt(value)
                 },
             },

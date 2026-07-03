@@ -57,8 +57,8 @@ class Grafico {
                     fontSize: 10,
                 },
                 padding: 2,
-                position:function(p) {
-                    return [p[0] + 4, p[1] - 4];
+                position: function (p) {
+                    return [p[0] + 4, p[1] - 4]
                 },
                 axisPointer: {
                     type: "cross",
@@ -72,10 +72,6 @@ class Grafico {
                     crossStyle: {
                         type: "solid",
                         color: "rgba(230, 230, 230, 0.6)",
-                        textStyle: {
-                            backgroundColor: "rgba(0, 0, 0, 0.9)",
-                            fontSize: 8,
-                        },
                     },
                 },
             },
@@ -235,7 +231,6 @@ class Grafico {
                 },
                 axisLabel: {
                     color: function (value, index) {
-                        
                         return dayjs(appState.$data.get()).format("DD-MM-YYYY") == value.substring(0, 10) ? "#5aaafa" : "#DADBDD"
                     },
                     fontSize: 9,
@@ -287,7 +282,7 @@ class Grafico {
                     },
                     fontSize: 9,
                     rotate: 45,
-                    formatter: function(value) {
+                    formatter: function (value) {
                         let label
                         let m = value.match(/(\d+)-(\d+)-(\d+)\s+(\d+)/)
                         if (m[4] == "00") {
@@ -416,7 +411,7 @@ class Grafico {
                     },
                     fontSize: 9,
                     rotate: 45,
-                    formatter: function(value) {
+                    formatter: function (value) {
                         let label
                         let m = value.match(/(\d+)-(\d+)-(\d+)\s+(\d+)/)
                         if (m[4] == "00") {
@@ -521,37 +516,33 @@ class Grafico {
                         ]),
                     },
                 },
+                label: {
+                    show: false,
+                },
                 itemStyle: {
-                    normal: {
-                        label: {
-                            show: false,
+                    borderWidth: 0.4,
+                    borderColor: "#000",
+                    opacity: 1,
+                    shadowColor: "rgba(0, 0, 0, 0.7)",
+                    shadowBlur: 6,
+                    shadowOffsetX: 2,
+                    color: new echarts.graphic.LinearGradient(0, 0, 1, 0, [
+                        {
+                            offset: 0,
+                            color: this.colors[`${dim}Color1`],
                         },
-                        barBorderWidth: "0.4",
-                        barBorderColor: "#000",
-                        opacity: 1,
-                        shadowColor: "rgba(0, 0, 0, 0.7)",
-                        shadowBlur: 6,
-                        shadowOffsetX: 2,
-                        color: new echarts.graphic.LinearGradient(0, 0, 1, 0, [
-                            {
-                                offset: 0,
-                                color: this.colors[`${dim}Color1`],
-                            },
-                            {
-                                offset: 0.5,
-                                color: this.colors[`${dim}Color2`],
-                            },
-                            {
-                                offset: 1,
-                                color: this.colors[`${dim}Color1`],
-                            },
-                        ]),
-                    },
+                        {
+                            offset: 0.5,
+                            color: this.colors[`${dim}Color2`],
+                        },
+                        {
+                            offset: 1,
+                            color: this.colors[`${dim}Color1`],
+                        },
+                    ]),
                 },
                 areaStyle: {
-                    normal: {
-                        opacity: 0.75,
-                    },
+                    opacity: 0.75,
                 },
             }
         })
@@ -591,32 +582,30 @@ class Grafico {
                         ]),
                     },
                 },
+                label: {
+                    show: false,
+                },
                 itemStyle: {
-                    normal: {
-                        label: {
-                            show: false,
+                    borderWidth: 0.4,
+                    borderColor: "#000",
+                    opacity: 1,
+                    shadowColor: "rgba(0, 0, 0, 0.7)",
+                    shadowBlur: 6,
+                    shadowOffsetX: 2,
+                    color: new echarts.graphic.LinearGradient(0, 0, 1, 0, [
+                        {
+                            offset: 0,
+                            color: this.colors[`${dim}Color1`],
                         },
-                        barBorderWidth: "0.4",
-                        barBorderColor: "#000",
-                        opacity: 1,
-                        shadowColor: "rgba(0, 0, 0, 0.7)",
-                        shadowBlur: 6,
-                        shadowOffsetX: 2,
-                        color: new echarts.graphic.LinearGradient(0, 0, 1, 0, [
-                            {
-                                offset: 0,
-                                color: this.colors[`${dim}Color1`],
-                            },
-                            {
-                                offset: 0.5,
-                                color: this.colors[`${dim}Color2`],
-                            },
-                            {
-                                offset: 1,
-                                color: this.colors[`${dim}Color1`],
-                            },
-                        ]),
-                    },
+                        {
+                            offset: 0.5,
+                            color: this.colors[`${dim}Color2`],
+                        },
+                        {
+                            offset: 1,
+                            color: this.colors[`${dim}Color1`],
+                        },
+                    ]),
                 },
             }
         })
@@ -648,10 +637,8 @@ class Grafico {
                     // color: this.colors[`${zona}Color1`]
                 },
                 areaStyle: {
-                    normal: {
-                        opacity: 0.75,
-                        // color: this.colors[`${zona}Color1`],
-                    },
+                    opacity: 0.75,
+                    // color: this.colors[`${zona}Color1`],
                 },
             }
         })
@@ -679,19 +666,17 @@ class Grafico {
                         // color: this.colors[`${zona}Color1`],
                     },
                 },
+                label: {
+                    show: false,
+                },
                 itemStyle: {
-                    normal: {
-                        label: {
-                            show: false,
-                        },
-                        barBorderWidth: "0.4",
-                        barBorderColor: "#000",
-                        opacity: 1,
-                        shadowColor: "rgba(0, 0, 0, 0.7)",
-                        shadowBlur: 6,
-                        shadowOffsetX: 2,
-                        // color: this.colors[`${zona}Color2`],
-                    },
+                    borderWidth: 0.4,
+                    borderColor: "#000",
+                    opacity: 1,
+                    shadowColor: "rgba(0, 0, 0, 0.7)",
+                    shadowBlur: 6,
+                    shadowOffsetX: 2,
+                    // color: this.colors[`${zona}Color2`],
                 },
             }
         })
@@ -791,7 +776,7 @@ class Grafico {
     }
 
     oncreate({ attrs, state }) {
-        let myChart = echarts.init(document.getElementById(state.elId), "dark", {height: 300})
+        let myChart = echarts.init(document.getElementById(state.elId), "dark", { height: 300 })
         let option = this._Option()
         window.onresize = myChart.resize
 
@@ -807,12 +792,11 @@ class Grafico {
                         source: state.source,
                     },
                     series: this._Series(),
-            });
-            })
-            .catch(err => {
+                })
+            }).catch(err => {
                 console.log(`Errore richiesta json remit`, err)
             })
-         })
+        })
 
         if (process.env.NODE_ENV !== "production") {
             let logStateAttrs = {
