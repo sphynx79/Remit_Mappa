@@ -1,3 +1,15 @@
+## 1.8.1 (2026-07-11)
+### Updated
+-  Grafici: larghezza adattiva al pannello, centratura con containLabel, bottone download allineato a destra, rimossa label asse X, resize con ResizeObserver e dispose corretto  ( 2026-07-11 ) [ sphynx79]
+-  Tabelle: colonne ore allineate ai valori con CSS grid, testo celle centrato, prima colonna a sinistra, filtri header compatti, casing uniforme e frecce ordinamento ridotte, font header 0.74rem  ( 2026-07-11 ) [ sphynx79]
+-  Sidebar e burger: piu spazio tra grafici e scrollbar (verticale e orizzontale), bottone chiusura sidebar ridotto  ( 2026-07-11 ) [ sphynx79]
+-  webpack dev server: soppresso overlay per il warning benigno "ResizeObserver loop"  ( 2026-07-11 ) [ sphynx79]
+-  jsconfig: disabilitato checkJs, restano path alias e IntelliSense  ( 2026-07-11 ) [ sphynx79]
+### Added
+-  Skill Claude "mithril" e plugin trinity abilitato  ( 2026-07-11 ) [ sphynx79]
+
+
+
 ## 1.8.0 (2026-07-03)
 ### Updated
 -  Migrato client a webpack 5.108 su Node 24.16 (webpack-cli 7, webpack-dev-server 5.2, webpack-merge 6)  ( 2026-07-03 ) [ sphynx79]
