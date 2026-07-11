@@ -31,17 +31,25 @@
         border: none;
     }
 
-    .tabulator-tableHolder {
+    .tabulator-tableholder {
         border-bottom: 1px solid #b1b1b1;
-        max-height: 170px;
+        max-height: 260px;
         @media screen and (max-height: 720px) {
            max-height: 98px;
         }
         overflow-x: hidden;
     }
 
-    .tabulator-tableHolder::-webkit-scrollbar { 
-      display: none;  // Safari and Chrome
+    // barra in stile overlay: a riposo non esiste (niente corsia, colonne allineate
+    // all'header), su hover appare sopra il bordo destro senza spostare il layout,
+    // perche' tabulator ricalcola le colonne solo agli eventi di resize/redraw
+    .tabulator-tableholder::-webkit-scrollbar {
+        display: none;
+    }
+
+    &:hover .tabulator-tableholder::-webkit-scrollbar {
+        display: block;
+        width: 6px;
     }
 
     .tabulator-col {
