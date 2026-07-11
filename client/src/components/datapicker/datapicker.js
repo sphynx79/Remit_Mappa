@@ -14,9 +14,9 @@ class DataPicker {
 
     oninit({ state }) {
         appState.$data.react(data => {
-            let urlLinee220 = `${appState.protocolo}://${appState.server}:${appState.port}/api/v1/remits/${data}/linee/220`
-            let urlLinee380 = `${appState.protocolo}://${appState.server}:${appState.port}/api/v1/remits/${data}/linee/380`
-            let urlCentrali = `${appState.protocolo}://${appState.server}:${appState.port}/api/v1/remits/${data}/centrali`
+            let urlLinee220 = `${appState.protocollo}://${appState.server}:${appState.port}/api/v1/remits/${data}/linee/220`
+            let urlLinee380 = `${appState.protocollo}://${appState.server}:${appState.port}/api/v1/remits/${data}/linee/380`
+            let urlCentrali = `${appState.protocollo}://${appState.server}:${appState.port}/api/v1/remits/${data}/centrali`
             appState.dispatch("getRemit", [urlLinee220])
             appState.dispatch("getRemit", [urlLinee380])
             appState.dispatch("getRemit", [urlCentrali])

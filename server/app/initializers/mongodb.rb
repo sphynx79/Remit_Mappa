@@ -33,16 +33,11 @@ class Mongodb
     client.database_names
     client
   rescue Mongo::Error::NoServerAvailable
-    message = <<~MESSAGE
+    warn <<~MESSAGE
       Non riesco connetermi al db:
       1) Controllare che il server mongodb sia avviato
       2) Controllare in config che IP, PORTA, NOME database siano corretti
     MESSAGE
-    print message
-    exit!
-    # puts 'Cannot connect to the server:'
-    # puts '1) Controllare che il server mongodb sia avviato'
-    # puts '2) Controllare in config che IP, PORTA, NOME database siano corretti'
-    # exit!
+    raise
   end
 end

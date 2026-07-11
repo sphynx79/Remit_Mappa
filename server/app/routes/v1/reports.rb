@@ -18,6 +18,7 @@ V1::Api.route("reports") do |r|
     remaining_path = request.remaining_path.tr("/", "")
     start_dt       = r.params['cache'] == "false" ? TZ.local_to_utc(DateTime.parse(start_dt)) : DateTime.parse(start_dt)
     end_dt         = r.params['cache'] == "false" ? TZ.local_to_utc(DateTime.parse(end_dt) + (1.0 - 1.0/24/60)) : DateTime.parse(end_dt) + (1.0 - 1.0/24/60)
+    r.halt(403, json({"error" => "Range date troppo ampio, massimo 366 giorni"})) if (end_dt - start_dt) > 366
     type           = remaining_path.to_sym
      
     # daily tecnologia
