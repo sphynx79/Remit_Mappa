@@ -9,8 +9,8 @@ class App {
         console.log(this.cache)
         // server configuration
         this.port = process.env.NODE_ENV == "production" ? window.location.port : PORTDEV
-        this.protocolo = [80, 9292].includes(this.port) || location.protocol === "http:" ? "http" : "https"
-        console.log(`Adress: ${this.protocolo}://${this.server}:${this.port}`)
+        this.protocollo = [80, 9292].includes(this.port) || location.protocol === "http:" ? "http" : "https"
+        console.log(`Adress: ${this.protocollo}://${this.server}:${this.port}`)
         // sidebar state to interact with burger with sidebar, in layout.js
         this.sidebarLeft = false
         this.sidebarRight = false
@@ -134,7 +134,7 @@ class App {
         // prettier-ignore
         m.request({ 
             method: "GET",
-            url: `${this.protocolo}://${this.server}:${this.port}/api/v1/units`,
+            url: `${this.protocollo}://${this.server}:${this.port}/api/v1/units`,
             // headers: (process.env.NODE_ENV == "production") ? {"Cache-Control": "public, max-age=0" } : {},
         }).then(response => {
             this.$lista_centrali.set(response)
