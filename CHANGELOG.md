@@ -1,3 +1,16 @@
+## 1.8.2 (2026-07-11)
+### Updated
+-  Server: raise al posto di exit! su errore DB con risposta 503 "Database non disponibile", il server si riprende da solo quando il DB torna raggiungibile  ( 2026-07-11 ) [ sphynx79]
+-  Server: regex validazione date ancorata (rifiuta stringhe con testo iniettato) e tetto di 366 giorni sul range dei report  ( 2026-07-11 ) [ sphynx79]
+-  Client: corretto typo protocolo => protocollo in app.js, datapicker.js, sidebar.js  ( 2026-07-11 ) [ sphynx79]
+### Fixed
+-  Tabelle senza limite di altezza in produzione: selettore .tabulator-tableholder minuscolo (tabulator v6), il camelCase funzionava solo in dev per il quirks mode  ( 2026-07-11 ) [ sphynx79]
+-  Doctype del template dev allineato a <!DOCTYPE html>: dev e produzione ora renderizzano entrambi in standards mode  ( 2026-07-11 ) [ sphynx79]
+### Added
+-  Tabelle: altezza massima a 260px e scrollbar verticale in stile overlay, visibile solo al passaggio del mouse, colonne sempre allineate all'header  ( 2026-07-11 ) [ sphynx79]
+
+
+
 ## 1.8.1 (2026-07-11)
 ### Updated
 -  Grafici: larghezza adattiva al pannello, centratura con containLabel, bottone download allineato a destra, rimossa label asse X, resize con ResizeObserver e dispose corretto  ( 2026-07-11 ) [ sphynx79]
