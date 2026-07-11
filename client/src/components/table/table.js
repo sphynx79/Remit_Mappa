@@ -23,7 +23,8 @@ class Table {
             title: col[0].toUpperCase() + col.slice(1),
             field: col,
             headerFilter: true,
-            // width: 100,
+            hozAlign: col == "nome" ? "left" : "center",
+            headerHozAlign: col == "nome" ? "left" : "center",
         }
     }
 
@@ -61,7 +62,6 @@ class Table {
 
     _formatRow(row) {
         let element = row.getElement()
-        let width = element.offsetWidth - 40
         let data = row.getData()
         let { hours, ...field } = data
         let hoursRow
@@ -69,13 +69,13 @@ class Table {
         // prettier-ignore
         var table =  m(".table" , { style: { "display": "none", "cursor": "auto" } } ,
                   m(".hours-row.bx--type-legal", { style: { "padding-left": "25px" } }, Object.keys(hours).map((key) => { 
-                      return m(".tabulator-cell", {style: {"width": `${(width / 24)+0.6}px`, "height": "20px", "text-align": "center"}},
+                      return m(".tabulator-cell", {style: {"height": "20px", "text-align": "center"}},
                           [ `${key}`,
                           ]
                         )
                   })), 
                   m(".hours-row.bx--type-legal", { style: { "padding-left": "25px" , "cursor": "auto" } }, Object.values(hours).map((value) => { 
-                      return m(".tabulator-cell", {style: {"width": `${(width / 24)+0.6}px`, "height": "20px", "text-align": "center"}},
+                      return m(".tabulator-cell", {style: {"height": "20px", "text-align": "center"}},
                           [ `${value | 0}`,
                           ]
                         )
@@ -127,6 +127,8 @@ class Table {
             // Tabulator 5+: le opzioni di colonna a livello tabella stanno in columnDefaults
             columnDefaults: {
                 resizable: false,
+                hozAlign: "center",
+                vertAlign: "middle",
             },
             // minHeight: 40,
             // maxHeight: 40,

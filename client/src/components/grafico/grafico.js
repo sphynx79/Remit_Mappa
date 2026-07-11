@@ -43,9 +43,10 @@ class Grafico {
             grid: {
                 borderWidth: 1,
                 top: 90,
-                bottom: 10,
-                height: "40%",
-                width: "84%",
+                bottom: 40,
+                left: 20,
+                right: 20,
+                containLabel: true,
                 textStyle: {
                     color: "#90979c",
                 },
@@ -91,10 +92,7 @@ class Grafico {
             },
             toolbox: {
                 show: true,
-                // orient: "vertical",
-                right: 130,
-                // top: "center",
-                top: 10,
+                right: 20,
                 showTitle: false,
                 feature: {
                     mark: {
@@ -200,7 +198,7 @@ class Grafico {
     _remitTecnologiaDailyOption() {
         let option = {
             xAxis: {
-                name: "Data",
+                name: "",
                 type: "category",
                 nameGap: 0,
                 nameTextStyle: {
@@ -245,7 +243,7 @@ class Grafico {
     _remitTecnologiaHourlyOption() {
         let option = {
             xAxis: {
-                name: "Data-Ora",
+                name: "",
                 type: "category",
                 nameGap: 0,
                 boundaryGap: false,
@@ -330,7 +328,7 @@ class Grafico {
     _remitZonaDailyOption() {
         let option = {
             xAxis: {
-                name: "Data",
+                name: "",
                 type: "category",
                 boundaryGap: false,
                 nameTextStyle: {
@@ -376,7 +374,7 @@ class Grafico {
     _remitZonaHourlyOption() {
         let option = {
             xAxis: {
-                name: "Data-Ora",
+                name: "",
                 type: "category",
                 nameGap: 0,
                 nameTextStyle: {
@@ -776,11 +774,19 @@ class Grafico {
     }
 
     oncreate({ attrs, state }) {
-        let myChart = echarts.init(document.getElementById(state.elId), "dark", { height: 300 })
+        let dom = document.getElementById(state.elId)
+        let myChart = echarts.init(dom, "dark", { height: 300 })
         let option = this._Option()
-        window.onresize = myChart.resize
 
         myChart.setOption(option, true)
+
+        state.chart = myChart
+        state.resizeObserver = new ResizeObserver(() => {
+            requestAnimationFrame(() => {
+                if (!myChart.isDisposed()) myChart.resize({ height: 300 })
+            })
+        })
+        state.resizeObserver.observe(dom)
 
         attrs.data.react(resp => {
             resp.then(remit => {
@@ -805,6 +811,11 @@ class Grafico {
             }
             console.log(`Component: ${this._componentName}`, logStateAttrs)
         }
+    }
+
+    onremove({ state }) {
+        if (state.resizeObserver) state.resizeObserver.disconnect()
+        if (state.chart) state.chart.dispose()
     }
 }
 

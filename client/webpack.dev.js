@@ -30,6 +30,12 @@ module.exports = merge(common, {
             overlay: {
                 errors: true,
                 warnings: true,
+                runtimeErrors: error => {
+                    if (error && error.message && /ResizeObserver loop/.test(error.message)) {
+                        return false
+                    }
+                    return true
+                },
             },
         },
         devMiddleware: {
