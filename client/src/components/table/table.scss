@@ -77,19 +77,28 @@
 
             .tabulator-col-content {
                 font-weight: 400;
-                font-size: 0.86rem;
+                font-size: 0.74rem;
                 background: linear-gradient(to bottom, rgba(47, 47, 47, 0.28) 0%, rgba(86, 86, 86, 0.54) 50%, rgba(47, 47, 47, 0.67) 20%);
 
-                > .tabulator-col-title {
+                .tabulator-col-title {
                     padding-left: 0.4vw;
 
                     vertical-align: middle;
-                    letter-spacing: 1px;
+                    letter-spacing: 0.5px;
+                    text-transform: uppercase;
                 }
 
-                > .tabulator-arrow {
-                    top: 6.5px;
+                .tabulator-arrow {
+                    transform: scale(0.72);
+                    opacity: 0.5;
                 }
+            }
+
+            .tabulator-header-filter input {
+                height: 20px;
+                padding: 2px 4px;
+                box-sizing: border-box;
+                font-size: 0.6rem;
             }
         }
 
@@ -131,8 +140,19 @@
             }
 
             .table {
+                .hours-row {
+                    display: grid;
+                    grid-auto-flow: column;
+                    grid-auto-columns: minmax(0, 1fr);
+                }
+
                 .hours-row > .tabulator-cell {
                     color: #cccccc;
+                    padding-left: 0;
+                    padding-right: 0;
+                    display: flex;
+                    align-items: center;
+                    justify-content: center;
                 }
 
                 .hours-row > .tabulator-cell:first-child {

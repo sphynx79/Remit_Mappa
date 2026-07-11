@@ -1,16 +1,11 @@
 /* src/components/grafico/grafico.scss */
 
 .grafico {
- // position: relative;
- width: 840px;
- @media screen and (max-width: 1390px) {
-   width: 600px;
- }
- // height: 300px;
+ width: 100%;
+ box-sizing: border-box;
  margin-top: 20px;
- // margin: 0px auto 20px auto;
  border: 1.4px solid #FFF;
  border-radius: 5px;
- 
+
 }
 
