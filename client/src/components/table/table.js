@@ -103,6 +103,9 @@ class Table {
         state.tableData = null
         state.type = attrs.type
         state.titolo = attrs.type == "linee" ? `LINEE ${attrs.volt}` : "CENTRALI"
+        // ferma il reactor su remit quando il componente viene smontato (opzione until:
+        // in questa versione di derivable react() non ritorna un handle per lo stop)
+        state.$smontato = atom(false)
         // @TODO: Vedere se gestire la linea correntemente selezionata
         // state.activeLine = -1
         // appState.$data.react(() => (state.activeLine = -1))
@@ -142,22 +145,26 @@ class Table {
         vnode.state.tabulator.on("rowClick", (e, row) => this._rowClick(e, row))
 
         vnode.state.tabulator.on("tableBuilt", () => {
-            vnode.attrs.remit.react(r => {
-                let remit = vnode.attrs.type == "linee" ? r.features : r
-                let propAndGeometry = remit.map(item => {
-                    let merged = { ...item["properties"], ...{ geometry: item["geometry"] } }
-                    return merged
-                })
-                this.tabulator.setData(propAndGeometry)
-            })
+            vnode.attrs.remit.react(
+                r => {
+                    let remit = vnode.attrs.type == "linee" ? r.features : r
+                    let propAndGeometry = remit.map(item => {
+                        let merged = { ...item["properties"], ...{ geometry: item["geometry"] } }
+                        return merged
+                    })
+                    this.tabulator.setData(propAndGeometry)
+                },
+                { until: vnode.state.$smontato }
+            )
         })
 
-        document.addEventListener("content-switcher-selected", evt => {
+        vnode.state.switcherHandler = evt => {
             let el = evt.target.getElementsByClassName("bx--content-switcher--selected")[0].getAttribute("data-target")
             if (el == "#tabelle") {
                 vnode.state.tabulator.redraw()
             }
-        })
+        }
+        document.addEventListener("content-switcher-selected", vnode.state.switcherHandler)
 
         if (process.env.NODE_ENV !== "production") {
             let logStateAttrs = {
@@ -166,6 +173,12 @@ class Table {
             }
             console.log(`Component: ${this._componentName}`, logStateAttrs)
         }
+    }
+
+    onremove({ state }) {
+        state.$smontato.set(true)
+        document.removeEventListener("content-switcher-selected", state.switcherHandler)
+        if (state.tabulator) state.tabulator.destroy()
     }
 }
 
