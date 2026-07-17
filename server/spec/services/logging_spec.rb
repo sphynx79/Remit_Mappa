@@ -49,21 +49,12 @@ RSpec.describe Logging do
     expect(output.string).to include('DEBUG', 'dettaglio', 'dettaglio da blocco')
   end
 
-  # Comportamento attuale fotografato (LOW-003): info con blocco delega a
-  # logger.debug, quindi il messaggio esce come DEBUG...
-  it 'info con blocco logga a livello DEBUG invece che INFO' do
-    Logging.logger.level = Logger::DEBUG
-    host.info { 'messaggio da blocco' }
-
-    expect(output.string).to include('DEBUG', 'messaggio da blocco')
-    expect(output.string).not_to include('INFO')
-  end
-
-  # ...e con il livello di default (INFO) il messaggio viene perso del tutto
-  it 'info con blocco a livello INFO perde il messaggio' do
+  # Fix LOW-003: info con blocco logga a livello INFO (prima delegava a debug
+  # e con il livello di default il messaggio veniva perso)
+  it 'info con blocco logga a livello INFO' do
     Logging.logger.level = Logger::INFO
     host.info { 'messaggio da blocco' }
 
-    expect(output.string).to be_empty
+    expect(output.string).to include('INFO', 'messaggio da blocco')
   end
 end
