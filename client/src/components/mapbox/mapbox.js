@@ -13,6 +13,8 @@ class MapBox {
         }
         this._server = window.location.hostname
         this._accessToken = "pk.eyJ1IjoiYnJvd3NlcmlubyIsImEiOiJjajIzYXRmNnQwMDBuMndwODl1MTdjdG1yIn0.FJ-S1md8BPQtSwTF4SZsMA"
+        // ferma i reactor allo smontaggio (react() non ritorna un handle per lo stop)
+        this.$smontato = atom(false)
     }
 
     handleVisibilityUnita() {
@@ -31,32 +33,32 @@ class MapBox {
                 map.setFilter("centrali", filterCentrali)
                 map.setFilter("remit_centrali", filterRemit)
             },
-            { skipFirst: true }
+            { skipFirst: true, until: this.$smontato }
         )
     }
 
     handleVisibilityLinee() {
-        appState.$linee_380_visibility.react(value => {
-            let layers = ["linee-380", "linee-380 blur", "remit_380"]
-            let visibility = value == false ? "none" : "visible"
-            layers.map(
-                layer => {
+        appState.$linee_380_visibility.react(
+            value => {
+                let layers = ["linee-380", "linee-380 blur", "remit_380"]
+                let visibility = value == false ? "none" : "visible"
+                layers.map(layer => {
                     map.setLayoutProperty(layer, "visibility", visibility)
-                },
-                { skipFirst: true }
-            )
-        })
+                })
+            },
+            { until: this.$smontato }
+        )
 
-        appState.$linee_220_visibility.react(value => {
-            let layers = ["linee-220", "linee-220 blur", "remit_220"]
-            let visibility = value == false ? "none" : "visible"
-            layers.map(
-                layer => {
+        appState.$linee_220_visibility.react(
+            value => {
+                let layers = ["linee-220", "linee-220 blur", "remit_220"]
+                let visibility = value == false ? "none" : "visible"
+                layers.map(layer => {
                     map.setLayoutProperty(layer, "visibility", visibility)
-                },
-                { skipFirst: true }
-            )
-        })
+                })
+            },
+            { until: this.$smontato }
+        )
     }
 
     handleRefreshRemitLinee() {
@@ -64,14 +66,14 @@ class MapBox {
             value => {
                 map.getSource("remit_380").setData(value)
             },
-            { skipFirst: true }
+            { skipFirst: true, until: this.$smontato }
         )
 
         appState.$remit_220.react(
             value => {
                 map.getSource("remit_220").setData(value)
             },
-            { skipFirst: true }
+            { skipFirst: true, until: this.$smontato }
         )
     }
 
@@ -81,7 +83,7 @@ class MapBox {
                 // value && map.getSource("remit_centrali") && map.getSource("remit_centrali").setData(value)
                 map.getSource("remit_centrali").setData(value)
             },
-            { skipFirst: true }
+            { skipFirst: true, until: this.$smontato }
         )
     }
 
@@ -154,7 +156,7 @@ class MapBox {
                         .addTo(map)
                 }
             },
-            { skipFirst: true }
+            { skipFirst: true, until: this.$smontato }
         )
     }
 
@@ -174,31 +176,29 @@ class MapBox {
                     },
                 })
             },
-            { skipFirst: true }
+            { skipFirst: true, until: this.$smontato }
         )
     }
 
     handleResetZoom() {
         let el = document.querySelector("div.mapboxgl-ctrl-bottom-right > div.mapboxgl-ctrl.mapboxgl-ctrl-group > button.mapboxgl-ctrl-compass")
-        el.addEventListener(
-            "click",
-            () => {
-                map.flyTo({
-                    center: [11.88, 42.13],
-                    zoom: 5.6,
-                    bearing: 0,
-                    pitch: 0,
-                    speed: 1.2,
-                    curve: 1.1,
-                    duration: 2000,
-                    essential: true,
-                    easing: function (t) {
-                        return t
-                    },
-                })
-            },
-            false
-        )
+        this.resetZoomEl = el
+        this.resetZoomHandler = () => {
+            map.flyTo({
+                center: [11.88, 42.13],
+                zoom: 5.6,
+                bearing: 0,
+                pitch: 0,
+                speed: 1.2,
+                curve: 1.1,
+                duration: 2000,
+                essential: true,
+                easing: function (t) {
+                    return t
+                },
+            })
+        }
+        el.addEventListener("click", this.resetZoomHandler, false)
         // const start = {
         //     center: [11.88, -72.13],
         //     zoom: 3,
@@ -609,6 +609,13 @@ class MapBox {
             }
             console.log(`Component: ${this._componentName}`, logStateAttrs)
         }
+    }
+
+    onremove({ state }) {
+        state.$smontato.set(true)
+        if (state.resetZoomEl) state.resetZoomEl.removeEventListener("click", state.resetZoomHandler)
+        if (process.env.NODE_ENV == "production") MainLoop.stop()
+        // la mappa mapbox globale resta viva: componente radice, mai smontato nel flusso normale
     }
 }
 
