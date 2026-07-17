@@ -24,4 +24,30 @@ RSpec.describe Report do
       expect(Concurrent::ScheduledTask).not_to have_received(:execute)
     end
   end
+
+  describe 'thread-safety della cache (HIGH-006)' do
+    it 'sotto accesso concorrente la stessa key viene fetchata una sola volta' do
+      chiamate = Concurrent::AtomicFixnum.new(0)
+      allow(described_class).to receive(:fetch_from_db).and_wrap_original do |originale, *args|
+        chiamate.increment
+        originale.call(*args)
+      end
+
+      risultati = Array.new(8) do
+        Thread.new { described_class.get_remit(cache: true, type: :centrali_zona_daily, data: '21-06-2018') }
+      end.map(&:value)
+
+      expect(risultati.uniq.size).to eq(1)
+      expect(chiamate.value).to eq(1)
+    end
+
+    it 'delete_expired_key elimina le entry scadute per il tipo' do
+      described_class.cache[:centrali_tecnologia_daily]['chiave-scaduta-test'] =
+        { value: 'x', expiration_time: Time.now.to_i - 10 }
+
+      described_class.delete_expired_key(:centrali_tecnologia_daily)
+
+      expect(described_class.cache[:centrali_tecnologia_daily].key?('chiave-scaduta-test')).to be false
+    end
+  end
 end
