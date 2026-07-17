@@ -22,4 +22,17 @@ end
 task c: :console
 task pry: :console
 
+begin
+  require 'rspec/core/rake_task'
+  require 'rubocop/rake_task'
+
+  RSpec::Core::RakeTask.new(:spec)
+  RuboCop::RakeTask.new
+
+  # rubocop entrerà nel default quando le offense esistenti saranno azzerate
+  task default: :spec
+rescue LoadError
+  # gemme di sviluppo assenti (es. produzione): niente task spec/rubocop
+end
+
 # Dir.glob('./lib/tasks/**/*.rake').each { |task| load(task) }
