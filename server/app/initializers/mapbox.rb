@@ -13,7 +13,7 @@ module Mapbox
     @@centrali ||= klass.get_centrali
     @@linee_380 ||= Oj.load(klass.get_json_data(@@dataset_linee380_url), mode: :compat)['features']
     @@linee_220 ||= Oj.load(klass.get_json_data(@@dataset_linee220_url), mode: :compat)['features']
-  rescue NoMethodError, Oj::ParseError
+  rescue NoMethodError, EncodingError # Oj solleva EncodingError sul JSON non valido
     warn <<~MESSAGE
       I dataset Mapbox non hanno il formato atteso (manca "features"):
       1) Controllare che MAPBOX_API_TOKEN sia un token valido
