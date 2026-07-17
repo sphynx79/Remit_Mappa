@@ -147,11 +147,11 @@ class MapBox {
                 }
 
                 function showPopUp() {
-                    let midle = Math.trunc(coordinates.length / 2)
+                    let middle = Math.trunc(coordinates.length / 2)
                     let popUps = document.getElementsByClassName("mapboxgl-popup")
                     if (popUps[0]) popUps[0].remove()
                     let popup = new mapboxgl.Popup()
-                        .setLngLat(coordinates[midle])
+                        .setLngLat(coordinates[middle])
                         .setHTML("<b>" + feature.nome + "</b><br>" + "<b>" + "update: " + "</b>" + feature.update + "<br>" + "<b>" + "start: " + "</b>" + feature.start + "<br>" + "<b>" + "end:  " + "</b>" + feature.end + "<br>")
                         .addTo(map)
                 }

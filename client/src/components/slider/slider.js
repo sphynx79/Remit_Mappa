@@ -1,4 +1,4 @@
-// src/components/checkbox/checkbox.js
+// src/components/slider/slider.js
 
 import "./slider.scss"
 
