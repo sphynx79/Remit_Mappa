@@ -6,11 +6,11 @@ class App {
         this.server = window.location.hostname
         // controllo se usare la cache si o no dai parametri dell'url
         this.cache = /cache=(true|false)/.exec(window.location.href) ? `?${/cache=(true|false)/.exec(window.location.href)[0]}` : "?cache=true"
-        console.log(this.cache)
+        if (process.env.NODE_ENV !== "production") console.log(this.cache)
         // server configuration
         this.port = process.env.NODE_ENV == "production" ? window.location.port : PORTDEV
         this.protocollo = [80, 9292].includes(this.port) || location.protocol === "http:" ? "http" : "https"
-        console.log(`Adress: ${this.protocollo}://${this.server}:${this.port}`)
+        if (process.env.NODE_ENV !== "production") console.log(`Adress: ${this.protocollo}://${this.server}:${this.port}`)
         // sidebar state to interact with burger with sidebar, in layout.js
         this.sidebarLeft = false
         this.sidebarRight = false

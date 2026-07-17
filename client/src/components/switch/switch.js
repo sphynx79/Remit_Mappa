@@ -5,7 +5,9 @@ import { ContentSwitcher } from "carbon-components"
 
 class Switch {
     constructor() {
-        this._componentName = this.constructor.name
+        if (process.env.NODE_ENV !== "production") {
+            this._componentName = this.constructor.name
+        }
     }
 
     view(vnode) {
