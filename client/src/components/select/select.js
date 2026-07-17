@@ -18,6 +18,7 @@ class Select {
 
     oncreate(vnode) {
         let el = vnode.dom
+        vnode.state.$smontato = atom(false)
 
         vnode.select = new Selectr(el, {
             searchable: true,
@@ -51,16 +52,19 @@ class Select {
         // let elSelect = elId.querySelector(".selectr-selected")
         // elSelect.addEventListener('focus', () => vnode.select.open());
 
-        vnode.attrs.data.react(value => {
-            // appState.$unita_visibility.react(r => console.dir(r), { skipFirst: true})
-            // if (vnode.attrs.id == "#filtro_unita") {
-            //     appState.$unita_visibility.set(value.map(value => value.value))
-            // }
-            // vnode.select.clear()
-            vnode.select.removeAll()
-            vnode.select.add(value)
-            // vnode.select.setValue(value)
-        })
+        vnode.attrs.data.react(
+            value => {
+                // appState.$unita_visibility.react(r => console.dir(r), { skipFirst: true})
+                // if (vnode.attrs.id == "#filtro_unita") {
+                //     appState.$unita_visibility.set(value.map(value => value.value))
+                // }
+                // vnode.select.clear()
+                vnode.select.removeAll()
+                vnode.select.add(value)
+                // vnode.select.setValue(value)
+            },
+            { until: vnode.state.$smontato }
+        )
 
         if (process.env.NODE_ENV !== "production") {
             let logStateAttrs = {
@@ -69,6 +73,11 @@ class Select {
             }
             console.log(`Component: ${this._componentName}`, logStateAttrs)
         }
+    }
+
+    onremove(vnode) {
+        vnode.state.$smontato.set(true)
+        if (vnode.select) vnode.select.destroy()
     }
 }
 
