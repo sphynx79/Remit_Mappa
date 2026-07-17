@@ -1,29 +1,30 @@
-// src/components/filtro_societa_content/filtro_societa_content.js
+// src/components/filtro_select_content/filtro_select_content.js
 
 import Select from "components/select/select.js"
 
-class FiltroSottotipoContent {
+// Content unificato dei 4 filtri a select (sottotipo, societa, impianto, unita),
+// parametrizzato via attrs: { id, placeholder, $filter, $select, tipo }
+class FiltroSelectContent {
     constructor() {
         if (process.env.NODE_ENV !== "production") {
             this._componentName = this.constructor.name
         }
     }
 
-    oninit({ state }) {
-        state.id = "sottotipo"
+    oninit({ attrs, state }) {
         state.$filterOpt = lens({
-            get: () => appState.dispatch("parseFilter", [appState.$filterSottotipo.get(), state.id]),
-            set: selection => appState.$selectSottotipo.set(selection),
+            get: () => appState.dispatch("parseFilter", [attrs.$filter.get(), attrs.tipo]),
+            set: selection => attrs.$select.set(selection),
         })
     }
 
-    view({ state }) {
+    view({ attrs, state }) {
         // prettier-ignore
         return m(".bx--form-item",
                 [
                       m(Select, {
-                          id: "#filtro_sottotipo",
-                          placeholder: "Sottotipo",
+                          id: attrs.id,
+                          placeholder: attrs.placeholder,
                           data: state.$filterOpt,
                           onchange: selection => state.$filterOpt.set(selection),
                       }),
@@ -42,4 +43,4 @@ class FiltroSottotipoContent {
     }
 }
 
-export default FiltroSottotipoContent
+export default FiltroSelectContent
