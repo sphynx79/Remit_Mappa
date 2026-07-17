@@ -29,6 +29,26 @@ RSpec.describe Logging do
     expect(output.string).to include('WARN', 'attenzione')
   end
 
+  it 'warn con blocco logga a livello WARN' do
+    host.warn { 'attenzione da blocco' }
+
+    expect(output.string).to include('WARN', 'attenzione da blocco')
+  end
+
+  it 'error con blocco logga a livello ERROR' do
+    host.error { 'boom da blocco' }
+
+    expect(output.string).to include('ERROR', 'boom da blocco')
+  end
+
+  it 'debug logga a livello DEBUG (con e senza blocco)' do
+    Logging.logger.level = Logger::DEBUG
+    host.debug('dettaglio')
+    host.debug { 'dettaglio da blocco' }
+
+    expect(output.string).to include('DEBUG', 'dettaglio', 'dettaglio da blocco')
+  end
+
   # Comportamento attuale fotografato (LOW-003): info con blocco delega a
   # logger.debug, quindi il messaggio esce come DEBUG...
   it 'info con blocco logga a livello DEBUG invece che INFO' do

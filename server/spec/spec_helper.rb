@@ -10,6 +10,11 @@ if ENV['RUN_COVERAGE_REPORT']
     add_filter %r{^/config/}
     add_filter %r{^/bin/}
   end
+
+  # ratchet: appena sotto il valore misurato (88.32% al 17-07-2026) — può solo salire.
+  # Lo scoperto residuo è giustificato: warm-up disattivati nei test, blocchi
+  # configure :development/:production, rescue "DB irraggiungibile"
+  SimpleCov.minimum_coverage 88
 end
 
 require_relative '../server'
