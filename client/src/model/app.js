@@ -150,21 +150,15 @@ class App {
                 url: url,
             })
             .then(response => {
-                switch (url) {
-                  case String(url.match(/.*\/remits\/.*\/centrali/)):
+                if (/.*\/remits\/.*\/centrali/.test(url)) {
                     this.$remit_centrali.set(response)
-                    break
-                  case String(url.match(/.*\/remits\/.*\/linee\/220/)):
+                } else if (/.*\/remits\/.*\/linee\/220/.test(url)) {
                     this.$remit_220.set(response)
-                    break
-                  case String(url.match(/.*\/remits\/.*\/linee\/380/)):
+                } else if (/.*\/remits\/.*\/linee\/380/.test(url)) {
                     this.$remit_380.set(response)
-                    break
-                  default:
+                } else {
                     console.log("Didn't match")
-                    break
                 }
-                
             })
             .catch(err => {
                 console.log(`Errore richiesta json remit  ${url}`, err)
