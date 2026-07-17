@@ -3,7 +3,7 @@ defaults: &defaults
   mapbox:
     url: 'https://api.mapbox.com'
     # il token NON va committato: si legge dalla variabile d'ambiente (setx MAPBOX_API_TOKEN "...")
-    api_token: <%= ENV.fetch('MAPBOX_API_TOKEN') %>
+    api_token: <%= ENV.fetch('MAPBOX_API_TOKEN') { raise 'Variabile MAPBOX_API_TOKEN mancante: impostarla con setx MAPBOX_API_TOKEN "<token>" e riaprire la shell' } %>
 
 development:
   <<: *defaults
