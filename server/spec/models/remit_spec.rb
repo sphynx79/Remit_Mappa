@@ -21,7 +21,8 @@ RSpec.describe Remit do
       expect(described_class.get_remit_centrali(DateFixtures::GIORNO_OK)).to be_a(String)
     end
 
-    # Comportamento attuale fotografato (MED-001): la rotta traduce il nil in 404
+    # Il modello ritorna nil su data senza dati; la rotta lo traduce in
+    # FeatureCollection vuota (contratto MED-001)
     it 'con data valida ma senza dati ritorna nil' do
       expect(described_class.get_remit_centrali(DateFixtures::GIORNO_SENZA_DATI)).to be_nil
     end
