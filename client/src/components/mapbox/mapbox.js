@@ -182,6 +182,7 @@ class MapBox {
 
     handleResetZoom() {
         let el = document.querySelector("div.mapboxgl-ctrl-bottom-right > div.mapboxgl-ctrl.mapboxgl-ctrl-group > button.mapboxgl-ctrl-compass")
+        if (!el) return
         this.resetZoomEl = el
         this.resetZoomHandler = () => {
             map.flyTo({
