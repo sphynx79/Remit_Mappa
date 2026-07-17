@@ -13,7 +13,7 @@ RSpec.describe Remit do
 
     it 'al secondo hit sulla stessa key serve dalla cache senza rifare la fetch' do
       described_class.get_remit_centrali(DateFixtures::GIORNO_OK)
-      expect(described_class.cache).to have_key(DateFixtures::GIORNO_OK)
+      expect(described_class.cache.key?(DateFixtures::GIORNO_OK)).to be true
 
       allow(described_class).to receive(:fetch_from_db)
         .and_raise('fetch inattesa: la cache non è stata usata')

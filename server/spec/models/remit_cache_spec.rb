@@ -20,4 +20,30 @@ RSpec.describe Remit do
       expect(Concurrent::ScheduledTask).to have_received(:execute).once
     end
   end
+
+  describe 'thread-safety della cache (HIGH-006)' do
+    it 'sotto accesso concorrente la stessa key viene fetchata una sola volta' do
+      chiamate = Concurrent::AtomicFixnum.new(0)
+      allow(described_class).to receive(:fetch_from_db).and_wrap_original do |originale, *args|
+        chiamate.increment
+        originale.call(*args)
+      end
+
+      risultati = Array.new(8) { Thread.new { described_class.get_remit_centrali('20-06-2018') } }.map(&:value)
+
+      expect(risultati.uniq.size).to eq(1)
+      expect(chiamate.value).to eq(1)
+    end
+
+    it 'delete_expired_key elimina le entry scadute e conserva le valide' do
+      described_class.cache['chiave-scaduta-test'] = { value: 'x', expiration_time: Time.now.to_i - 10 }
+      described_class.cache['chiave-valida-test']  = { value: 'y', expiration_time: Time.now.to_i + 1000 }
+
+      described_class.delete_expired_key
+
+      expect(described_class.cache.key?('chiave-scaduta-test')).to be false
+      expect(described_class.cache.key?('chiave-valida-test')).to be true
+      described_class.cache.delete('chiave-valida-test')
+    end
+  end
 end
