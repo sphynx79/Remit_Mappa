@@ -4,7 +4,7 @@
 # frozen_string_literal: true
 
 class UpdateCacheUnits
-  attr_reader :name, :description, :time_interval
+  attr_reader :name, :description, :execution_interval, :timeout_interval
   def initialize
     @name = "cache_units"
     @description = "Update della cache delle unita"
