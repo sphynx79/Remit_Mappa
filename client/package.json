@@ -4,11 +4,9 @@
     "main": "index.js",
     "license": "MIT",
     "scripts": {
-        "start": "set next=false&& nodemon --watch webpack.dev.js --watch webpack.common.js --exec \"webpack serve --progress --config webpack.dev.js\"",
-        "start_ssl": "set next=false&& set ssl=true&& nodemon --watch webpack.dev.js --watch webpack.common.js --exec \"webpack serve --progress --config webpack.dev.js\"",
-        "build": "set next=false&& webpack --config webpack.prod.js",
-        "start:next": "set next=true&& nodemon --watch webpack.dev.js --watch webpack.common.js --exec \"webpack serve --progress --config webpack.dev.js\"",
-        "build:next": "set next=true&& webpack --config webpack.prod.js"
+        "start": "nodemon --watch webpack.dev.js --watch webpack.common.js --exec \"webpack serve --progress --config webpack.dev.js\"",
+        "start_ssl": "set ssl=true&& nodemon --watch webpack.dev.js --watch webpack.common.js --exec \"webpack serve --progress --config webpack.dev.js\"",
+        "build": "webpack --config webpack.prod.js"
     },
     "devDependencies": {
         "autoprefixer": "^10.4.24",
