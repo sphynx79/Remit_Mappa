@@ -308,7 +308,7 @@ class MapBox {
             }
         }
 
-        function draw(interop) {
+        function draw() {
             let intPos = parseInt(dashArrayPos)
             if (dashArraylastPos != intPos) {
                 map.setPaintProperty("remit_380", "line-dasharray", dashArraySeq[intPos])
