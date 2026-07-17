@@ -3,7 +3,7 @@
 import "./legend.scss"
 import { Tile } from "carbon-components"
 
-class Leggend {
+class Legend {
     constructor() {
         if (process.env.NODE_ENV !== "production") {
             this._componentName = this.constructor.name
@@ -58,4 +58,4 @@ class Leggend {
     }
 }
 
-export default Leggend
+export default Legend

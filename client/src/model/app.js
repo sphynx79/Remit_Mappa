@@ -12,7 +12,7 @@ class App {
         // this.port è un numero in dev (PORTDEV) e una stringa in produzione (location.port):
         // il confronto va fatto su stringhe, altrimenti in produzione non matcha mai
         this.protocollo = ["80", "9292"].includes(String(this.port)) || location.protocol === "http:" ? "http" : "https"
-        if (process.env.NODE_ENV !== "production") console.log(`Adress: ${this.protocollo}://${this.server}:${this.port}`)
+        if (process.env.NODE_ENV !== "production") console.log(`Address: ${this.protocollo}://${this.server}:${this.port}`)
         // sidebar state to interact with burger with sidebar, in layout.js
         this.sidebarLeft = false
         this.sidebarRight = false
@@ -75,15 +75,15 @@ class App {
         this.$solareVisibility.get() && filterArray.push({ tipo: "SOLARE", pmin: this.$solarePminPmax.get()[0], pmax: this.$solarePminPmax.get()[1] })
         this.$pompaggiVisibility.get() && filterArray.push({ tipo: "POMPAGGIO", pmin: this.$pompaggiPminPmax.get()[0], pmax: this.$pompaggiPminPmax.get()[1] })
         this.$geotermicoVisibility.get() && filterArray.push({ tipo: "GEOTERMICO", pmin: this.$geotermicoPminPmax.get()[0], pmax: this.$geotermicoPminPmax.get()[1] })
-        let filterArrayLenght = filterArray.length
+        let filterArrayLength = filterArray.length
         let centrali = this.$lista_centrali.get()
-        let centraliLenght = centrali.length
+        let centraliLength = centrali.length
         let centraliFiltered = []
 
-        for (let i = 0; i < centraliLenght; i++) {
+        for (let i = 0; i < centraliLength; i++) {
             let centrale = centrali[i]
 
-            for (let y = 0; y < filterArrayLenght; y++) {
+            for (let y = 0; y < filterArrayLength; y++) {
                 let filter = filterArray[y]
                 let min = centrale["tipo"] === "POMPAGGIO" ? centrale["pmin"] : centrale["pmax"]
                 if (centrale["tipo"] === filter.tipo && min >= filter.pmin && centrale["pmax"] <= filter.pmax) {

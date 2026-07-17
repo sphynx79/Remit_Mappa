@@ -1,6 +1,6 @@
 // src/components/filtro_msd_content/filtro_msd_content.js
 
-import RadioButton from "components//radio_button/radio_button.js"
+import RadioButton from "components/radio_button/radio_button.js"
 
 class FiltroMsdContent {
     constructor() {
