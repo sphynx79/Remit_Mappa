@@ -27,7 +27,7 @@ class FiltroTecnologiaContent {
         return m("fieldset.bx--fieldset", [
             this.tecnologies.map(tecnologia => {
                 let label = tecnologia.label
-                let checkBoxId = "bx--chechbox__" + label.toLowerCase()
+                let checkBoxId = "bx--checkbox__" + label.toLowerCase()
                 let sliderId   = "bx--slider__" + label.toLowerCase()
                 return m(".bx--form-item", [
                         m(CheckBox, {
