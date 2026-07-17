@@ -7,10 +7,7 @@ import DataPicker from "components/datapicker/datapicker.js"
 import FiltroLineeContent from "components/filtro_linee_content/filtro_linee_content.js"
 import FiltroTecnologiaContent from "components/filtro_tecnologia_content/filtro_tecnologia_content.js"
 import FiltroMsdContent from "components/filtro_msd_content/filtro_msd_content.js"
-import FiltroSottotipoContent from "components/filtro_sottotipo_content/filtro_sottotipo_content.js"
-import FiltroSocietaContent from "components/filtro_societa_content/filtro_societa_content.js"
-import FiltroImpiantoContent from "components/filtro_impianto_content/filtro_impianto_content.js"
-import FiltroUnitaContent from "components/filtro_unita_content/filtro_unita_content.js"
+import FiltroSelectContent from "components/filtro_select_content/filtro_select_content.js"
 
 class Filtri {
     constructor() {
@@ -27,10 +24,14 @@ class Filtri {
                     m(FiltriItem, { content: FiltroLineeContent,      content_id: "filtro_linee",      content_title: "Linee" }),
                     m(FiltriItem, { content: FiltroTecnologiaContent, content_id: "filtro_tecnologia", content_title: "Tecnologia" }),
                     m(FiltriItem, { content: FiltroMsdContent,        content_id: "filtro_msd",        content_title: "Unità Abilitata MSD" }),
-                    m(FiltriItem, { content: FiltroSottotipoContent,  content_id: "filtro_sottotipo",  content_title: "Sottotipo" }),
-                    m(FiltriItem, { content: FiltroSocietaContent,    content_id: "filtro_societa",    content_title: "Societa" }),
-                    m(FiltriItem, { content: FiltroImpiantoContent,   content_id: "filtro_impianto",   content_title: "Impianto" }),
-                    m(FiltriItem, { content: FiltroUnitaContent,      content_id: "filtro_unita",      content_title: "Unita" }),
+                    m(FiltriItem, { content: FiltroSelectContent, content_id: "filtro_sottotipo", content_title: "Sottotipo",
+                        content_attrs: { id: "#filtro_sottotipo", placeholder: "Sottotipo", $filter: appState.$filterSottotipo, $select: appState.$selectSottotipo, tipo: "sottotipo" } }),
+                    m(FiltriItem, { content: FiltroSelectContent, content_id: "filtro_societa", content_title: "Societa",
+                        content_attrs: { id: "#filtro_societa", placeholder: "Societa", $filter: appState.$filterSocieta, $select: appState.$selectSocieta, tipo: "company" } }),
+                    m(FiltriItem, { content: FiltroSelectContent, content_id: "filtro_impianto", content_title: "Impianto",
+                        content_attrs: { id: "#filtro_impianto", placeholder: "Impianto", $filter: appState.$filterImpianto, $select: appState.$selectImpianto, tipo: "impianto" } }),
+                    m(FiltriItem, { content: FiltroSelectContent, content_id: "filtro_unita", content_title: "Unita",
+                        content_attrs: { id: "#filtro_unita", placeholder: "Unita", $filter: appState.$filterUnita, $select: appState.$selectUnita, tipo: "etso" } }),
             ]),
         ])
     }
