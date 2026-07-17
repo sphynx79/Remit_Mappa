@@ -14,6 +14,9 @@ module DateFixtures
   # anche il formato ISO yyyy-mm-dd e date impossibili tipo 00-00-2018 (LOW-001)
   DATA_MALFORMATA     = '32-06-2018'
   RANGE_AMPIO_START   = '01-01-2017' # con REPORT_END -> piu di 366 giorni
+  # i report daily nello snapshot arrivano al 03-11-2021: questo range è coperto solo in parte
+  RANGE_PARZIALE_START = '31-10-2021'
+  RANGE_PARZIALE_END   = '05-11-2021'
 end
 
 module JsonHelper
