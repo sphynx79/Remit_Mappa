@@ -36,7 +36,7 @@ class Filtri {
 
     oncreate(vnode) {
         let el = vnode.dom.firstElementChild
-        Accordion.create(el)
+        vnode.state.accordion = Accordion.create(el)
         if (process.env.NODE_ENV !== "production") {
             let logStateAttrs = {
                 attrs: vnode.attrs,
@@ -44,6 +44,10 @@ class Filtri {
             }
             console.log(`Component: ${this._componentName}`, logStateAttrs)
         }
+    }
+
+    onremove({ state }) {
+        if (state.accordion) state.accordion.release()
     }
 }
 
