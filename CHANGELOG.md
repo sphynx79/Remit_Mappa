@@ -1,3 +1,30 @@
+## Non rilasciato (post 1.8.2)
+### Fixed
+-  Server: JSON valido ("[]") sui report in cache con date senza dati, prima usciva "[,,,,]" non parsabile [HIGH-001]  ( 2026-07-18 ) [ sphynx79]
+-  Server: 200 con FeatureCollection vuota su remits centrali con data valida senza dati, prima 404 fuorviante [MED-001]  ( 2026-07-18 ) [ sphynx79]
+-  Server: 403 sulle date impossibili che superavano la regex (es. 31-02-2018), prima 500 [LOW-001]  ( 2026-07-18 ) [ sphynx79]
+-  Server: cache Remit/Report thread-safe su Concurrent::Map, un solo fetch per key sotto richieste concorrenti [HIGH-006]  ( 2026-07-18 ) [ sphynx79]
+-  Server: rake console riparata (require di config/boot inesistente) [HIGH-003]  ( 2026-07-17 ) [ sphynx79]
+-  Server: boot indipendente dalla directory di lancio (path VERSION e Gemfile ancorati al file) [LOW-002]  ( 2026-07-18 ) [ sphynx79]
+-  Server: Logging#info con blocco logga a livello INFO, prima delegava a debug e il messaggio andava perso [LOW-003]  ( 2026-07-18 ) [ sphynx79]
+-  Client: guardia anti-race sul cambio data rapido, mappa/tabelle/grafici mostrano sempre l'ultima data selezionata [HIGH-005]  ( 2026-07-17 ) [ sphynx79]
+-  Client: protocollo derivato dalla porta anche in produzione (confronto su stringhe, prima non matchava mai) [LOW-010]  ( 2026-07-18 ) [ sphynx79]
+-  Procfile: avvio server con bundle exec puma, rackup non esiste piu con Rack 3 [HIGH-002]  ( 2026-07-17 ) [ sphynx79]
+### Updated
+-  Server: warm-up cache per-miss (prima partiva una sola volta per tipo) e solo per date entro 30 giorni da oggi [MED-005][MED-004]  ( 2026-07-18 ) [ sphynx79]
+-  Server: boot robusto Mapbox, messaggi chiari per MAPBOX_API_TOKEN mancante e dataset non scaricabili [MED-006]  ( 2026-07-18 ) [ sphynx79]
+-  Client: 4 richieste report deterministiche per cambio data, atomi + react al posto di derive con side effect [MED-002]  ( 2026-07-18 ) [ sphynx79]
+-  Client: teardown completo dei componenti (onremove con destroy/release e stop dei reactor via until) [MED-003]  ( 2026-07-18 ) [ sphynx79]
+-  Client: echarts 6 con import modulari, vendor bundle da 1.71 a 1.29 MiB [MED-011]  ( 2026-07-18 ) [ sphynx79]
+-  Client: deduplicati i componenti filtro, wrapper eliminati e select unificata parametrizzata (-533 righe) [MED-013]  ( 2026-07-18 ) [ sphynx79]
+-  Repo: chiavi/certificati TLS e server/package-lock.json spurio fuori dal tracking git [MED-012][LOW-007]  ( 2026-07-18 ) [ sphynx79]
+-  Tooling: config RuboCop riparata per RuboCop 1.88 [MED-010]; typo e flag NEXT morto rimossi [LOW-005]; log client gated su produzione [LOW-006]  ( 2026-07-18 ) [ sphynx79]
+### Added
+-  Suite di test server RSpec + rack-test (60 spec: caratterizzazione API, unit su modelli/helper/logging, cache e concorrenza) con coverage 88% e soglia minima; task rake spec/rubocop  ( 2026-07-18 ) [ sphynx79]
+-  README con istruzioni di avvio sviluppo (mongod di test, puma, webpack dev server, spec)  ( 2026-07-18 ) [ sphynx79]
+
+
+
 ## 1.8.2 (2026-07-11)
 ### Updated
 -  Server: raise al posto di exit! su errore DB con risposta 503 "Database non disponibile", il server si riprende da solo quando il DB torna raggiungibile  ( 2026-07-11 ) [ sphynx79]
