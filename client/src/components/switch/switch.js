@@ -38,7 +38,7 @@ class Switch {
 
     oncreate(vnode) {
         let el = vnode.dom
-        ContentSwitcher.create(el)
+        vnode.state.switcher = ContentSwitcher.create(el)
 
         // const instance = ContentSwitcher.init()
         if (process.env.NODE_ENV !== "production") {
@@ -48,6 +48,10 @@ class Switch {
             }
             console.log(`Component: ${this._componentName}`, logStateAttrs)
         }
+    }
+
+    onremove({ state }) {
+        if (state.switcher) state.switcher.release()
     }
 }
 
