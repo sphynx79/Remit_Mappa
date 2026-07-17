@@ -19,6 +19,14 @@ RSpec.describe 'API v1 remits' do
       expect(json_body['error']).to eq('Data non corretta')
     end
 
+    # LOW-001: data impossibile che supera la regex (31 febbraio)
+    it 'con data impossibile risponde 403' do
+      get '/api/v1/remits/31-02-2018/centrali'
+
+      expect(last_response.status).to eq(403)
+      expect(json_body['error']).to eq('Data non corretta')
+    end
+
     # Contratto scelto per MED-001: data valida ma senza dati -> 200 con
     # FeatureCollection vuota (prima: nil -> 404 fuorviante del plugin not_found)
     it 'con data valida ma senza dati risponde 200 con FeatureCollection vuota' do

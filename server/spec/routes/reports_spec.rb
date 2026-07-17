@@ -51,6 +51,14 @@ RSpec.describe 'API v1 reports' do
       expect(json_body['error']).to eq('Start date non corretta')
     end
 
+    # LOW-001: data impossibile che supera la regex
+    it 'con start date impossibile risponde 403' do
+      get "/api/v1/reports/00-01-2018/#{DateFixtures::REPORT_END}/centrali_tecnologia_daily"
+
+      expect(last_response.status).to eq(403)
+      expect(json_body['error']).to eq('Start date non corretta')
+    end
+
     it 'con range oltre 366 giorni risponde 403' do
       get "/api/v1/reports/#{DateFixtures::RANGE_AMPIO_START}/#{DateFixtures::REPORT_END}/centrali_tecnologia_daily"
 

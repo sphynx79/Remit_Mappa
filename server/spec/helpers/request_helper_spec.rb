@@ -27,9 +27,11 @@ RSpec.describe RequestHelpers do
       expect(helper.data_is_correct('')).to be_truthy
     end
 
-    # Comportamento attuale fotografato (LOW-001): la regex accetta date impossibili
-    it 'accetta date impossibili come 00-00-2018' do
-      expect(helper.data_is_correct('00-00-2018')).to be_falsy
+    # Fix LOW-001: le date impossibili che superano la regex vengono respinte
+    # dal parse reale (prima arrivavano a Date.parse nelle rotte -> 500)
+    it 'respinge date impossibili come 00-00-2018 e 31-02-2018' do
+      expect(helper.data_is_correct('00-00-2018')).to be_truthy
+      expect(helper.data_is_correct('31-02-2018')).to be_truthy
     end
   end
 
