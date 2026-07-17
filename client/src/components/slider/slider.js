@@ -40,11 +40,12 @@ class Slider {
             },
         })
 
+        state.pipHandler = e => this.clickOnPip(e)
         var pips = state.range.querySelectorAll(".noUi-value")
         for (var i = 0; i < pips.length; i++) {
             // For this example. Do this in CSS!
             pips[i].style.cursor = "pointer"
-            pips[i].addEventListener("click", e => this.clickOnPip(e))
+            pips[i].addEventListener("click", state.pipHandler)
         }
 
         slider.on("set", min_max => {
@@ -63,6 +64,11 @@ class Slider {
     clickOnPip(e) {
         var value = Number(e.target.getAttribute("data-value"))
         this.range.noUiSlider.set(value)
+    }
+
+    onremove({ state }) {
+        state.range.querySelectorAll(".noUi-value").forEach(pip => pip.removeEventListener("click", state.pipHandler))
+        if (state.range.noUiSlider) state.range.noUiSlider.destroy()
     }
 }
 
