@@ -4,7 +4,7 @@ task :environment do
   ENV['RACK_ENV'] ||= ARGV[1] || 'development'
   ARGV.clear
 
-  require_relative './config/boot'
+  require_relative './server'
 end
 
 desc 'Start REPL session (short-cut alias: "c")'
