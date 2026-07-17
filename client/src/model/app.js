@@ -9,7 +9,9 @@ class App {
         if (process.env.NODE_ENV !== "production") console.log(this.cache)
         // server configuration
         this.port = process.env.NODE_ENV == "production" ? window.location.port : PORTDEV
-        this.protocollo = [80, 9292].includes(this.port) || location.protocol === "http:" ? "http" : "https"
+        // this.port è un numero in dev (PORTDEV) e una stringa in produzione (location.port):
+        // il confronto va fatto su stringhe, altrimenti in produzione non matcha mai
+        this.protocollo = ["80", "9292"].includes(String(this.port)) || location.protocol === "http:" ? "http" : "https"
         if (process.env.NODE_ENV !== "production") console.log(`Adress: ${this.protocollo}://${this.server}:${this.port}`)
         // sidebar state to interact with burger with sidebar, in layout.js
         this.sidebarLeft = false
