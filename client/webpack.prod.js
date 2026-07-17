@@ -82,7 +82,6 @@ module.exports = merge(common, {
             inject: false,
         }),
         new webpack.DefinePlugin({
-            NEXT: JSON.stringify(process.env.next),
         }),
         new MiniCssExtractPlugin({
             filename: "css/[name].css",
