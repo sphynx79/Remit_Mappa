@@ -15,5 +15,13 @@ RSpec.describe Report do
 
       expect(Concurrent::ScheduledTask).to have_received(:execute).twice
     end
+
+    it 'una data storica non innesca il warm-up dei giorni attorno (MED-004)' do
+      allow(Concurrent::ScheduledTask).to receive(:execute)
+
+      described_class.get_remit(cache: true, type: :centrali_tecnologia_daily, data: '01-02-2016')
+
+      expect(Concurrent::ScheduledTask).not_to have_received(:execute)
+    end
   end
 end

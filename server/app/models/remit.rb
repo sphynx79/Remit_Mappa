@@ -14,8 +14,12 @@ class Remit < Mongodb
       around_after  = 10
       @@cache ||= Hash.new do |hash, key|
         # puts "did not find key #{key} in cache, fetch from db ..."
-        Concurrent::ScheduledTask.execute(4) do
-            refresh_cache_around_day(data: Date.strptime(key,"%d-%m-%Y"), keep_old: true,  keep_day: false, around_before: around_before, around_after: around_after)
+        # il warm-up dei giorni attorno serve solo per la navigazione sulle date correnti:
+        # sulle date storiche basta il fetch puntuale della key richiesta (MED-004)
+        if (Date.today - Date.strptime(key, "%d-%m-%Y")).abs <= 30
+          Concurrent::ScheduledTask.execute(4) do
+              refresh_cache_around_day(data: Date.strptime(key,"%d-%m-%Y"), keep_old: true,  keep_day: false, around_before: around_before, around_after: around_after)
+          end
         end
         @@cache[key] = { value: fetch_from_db(key), expiration_time: Time.now.to_i + @@expiration_time }
       end

@@ -13,10 +13,14 @@ class Report < Mongodb
         @@cache[cache_type] ||= Hash.new do |_hash, key|
           # puts "did not find key #{key} in cache, fetch from db ..."
           # ogni miss innesca il proprio warm-up attorno alla data richiesta (stesso
-          # pattern di Remit): la vecchia memoizzazione su @@task lo eseguiva una volta sola
-          Concurrent::ScheduledTask.execute(5) do
-              date_time = (cache_type.to_s.include? 'daily') ? DateTime.strptime(key, '%d-%m-%Y') : DateTime.strptime(key, '%d-%m-%Y %H:%M:%S')
-              refresh_cache_around_day(data: date_time, cache_type: cache_type, keep_old: true, keep_day: false, around_before: around_before, around_after: around_after)
+          # pattern di Remit): la vecchia memoizzazione su @@task lo eseguiva una volta sola.
+          # Il warm-up serve solo per la navigazione sulle date correnti: sulle date
+          # storiche basta il fetch puntuale della key richiesta (MED-004)
+          date_time = (cache_type.to_s.include? 'daily') ? DateTime.strptime(key, '%d-%m-%Y') : DateTime.strptime(key, '%d-%m-%Y %H:%M:%S')
+          if (Date.today - date_time.to_date).abs <= 30
+            Concurrent::ScheduledTask.execute(5) do
+                refresh_cache_around_day(data: date_time, cache_type: cache_type, keep_old: true, keep_day: false, around_before: around_before, around_after: around_after)
+            end
           end
           @@cache[cache_type][key] = { value: fetch_from_db(key, cache_type), expiration_time: Time.now.to_i + @@expiration_time }
         end
