@@ -57,7 +57,7 @@ module.exports = {
             m: "mithril", //Global access
             noUiSlider: "nouislider",
             MainLoop: "mainloop.js",
-            echarts: "echarts",
+            echarts: "echarts/core",
             dayjs: "dayjs",
             derive: ["derivable", "derive"],
             atom: ["derivable", "atom"],
