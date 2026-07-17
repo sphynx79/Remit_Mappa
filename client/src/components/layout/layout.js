@@ -15,11 +15,6 @@ class Layout {
         }
     }
 
-    _hideSideBar() {
-        appState.sidebarLeft && appState.dispatch("hideSidebar", ["left"])
-        appState.sidebarRight && appState.dispatch("hideSidebar", ["right"])
-    }
-
     view({ attrs, state }) {
         // prettier-ignore
         return m("#layout", [
