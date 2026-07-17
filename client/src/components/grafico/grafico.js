@@ -789,7 +789,11 @@ class Grafico {
         state.resizeObserver.observe(dom)
 
         attrs.data.react(resp => {
+            // guardia anti-race: si applica solo la risposta dell'ultima richiesta vista
+            // (le Promise possono risolversi fuori ordine al cambio data rapido)
+            state.ultimaRichiesta = resp
             resp.then(remit => {
+                if (state.ultimaRichiesta !== resp) return
                 state.dimensions = Object.keys(remit[0])
                 state.source = remit
                 myChart.setOption({

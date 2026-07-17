@@ -144,12 +144,16 @@ class App {
     }
 
     getRemit(url) {
+        // guardia anti-race: se nel frattempo la data è cambiata, la risposta è stantia
+        // e non va applicata (le richieste possono completare fuori ordine)
+        let dataRichiesta = this.$data.get()
         // prettier-ignore
         m.request({
                 method: "GET",
                 url: url,
             })
             .then(response => {
+                if (this.$data.get() !== dataRichiesta) return
                 if (/.*\/remits\/.*\/centrali/.test(url)) {
                     this.$remit_centrali.set(response)
                 } else if (/.*\/remits\/.*\/linee\/220/.test(url)) {
