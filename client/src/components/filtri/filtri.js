@@ -2,14 +2,15 @@
 
 import "./filtri.scss"
 import { Accordion } from "carbon-components"
-import FiltroData from "components/filtro_data/filtro_data.js"
-import FiltroLinee from "components/filtro_linee/filtro_linee.js"
-import FiltroTecnologia from "components/filtro_tecnologia/filtro_tecnologia.js"
-import FiltroMsd from "components/filtro_msd/filtro_msd.js"
-import FiltroSottotipo from "components/filtro_sottotipo/filtro_sottotipo.js"
-import FiltroSocieta from "components/filtro_societa/filtro_societa.js"
-import FiltroImpianto from "components/filtro_impianto/filtro_impianto.js"
-import FiltroUnita from "components/filtro_unita/filtro_unita.js"
+import FiltriItem from "components/filtri_item/filtri_item.js"
+import DataPicker from "components/datapicker/datapicker.js"
+import FiltroLineeContent from "components/filtro_linee_content/filtro_linee_content.js"
+import FiltroTecnologiaContent from "components/filtro_tecnologia_content/filtro_tecnologia_content.js"
+import FiltroMsdContent from "components/filtro_msd_content/filtro_msd_content.js"
+import FiltroSottotipoContent from "components/filtro_sottotipo_content/filtro_sottotipo_content.js"
+import FiltroSocietaContent from "components/filtro_societa_content/filtro_societa_content.js"
+import FiltroImpiantoContent from "components/filtro_impianto_content/filtro_impianto_content.js"
+import FiltroUnitaContent from "components/filtro_unita_content/filtro_unita_content.js"
 
 class Filtri {
     constructor() {
@@ -22,14 +23,14 @@ class Filtri {
         // prettier-ignore
         return m(".filtri",  [
                 m("ul.bx--accordion[data-accordion='']", [
-                    m(FiltroData),
-                    m(FiltroLinee),
-                    m(FiltroTecnologia),
-                    m(FiltroMsd),
-                    m(FiltroSottotipo),
-                    m(FiltroSocieta),
-                    m(FiltroImpianto),
-                    m(FiltroUnita),
+                    m(FiltriItem, { content: DataPicker,              content_id: "filtro_data",       content_title: "Data" }),
+                    m(FiltriItem, { content: FiltroLineeContent,      content_id: "filtro_linee",      content_title: "Linee" }),
+                    m(FiltriItem, { content: FiltroTecnologiaContent, content_id: "filtro_tecnologia", content_title: "Tecnologia" }),
+                    m(FiltriItem, { content: FiltroMsdContent,        content_id: "filtro_msd",        content_title: "Unità Abilitata MSD" }),
+                    m(FiltriItem, { content: FiltroSottotipoContent,  content_id: "filtro_sottotipo",  content_title: "Sottotipo" }),
+                    m(FiltriItem, { content: FiltroSocietaContent,    content_id: "filtro_societa",    content_title: "Societa" }),
+                    m(FiltriItem, { content: FiltroImpiantoContent,   content_id: "filtro_impianto",   content_title: "Impianto" }),
+                    m(FiltriItem, { content: FiltroUnitaContent,      content_id: "filtro_unita",      content_title: "Unita" }),
             ]),
         ])
     }
