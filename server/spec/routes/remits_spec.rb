@@ -19,13 +19,14 @@ RSpec.describe 'API v1 remits' do
       expect(json_body['error']).to eq('Data non corretta')
     end
 
-    # Comportamento attuale fotografato (MED-001): data valida ma senza dati
-    # -> il modello ritorna nil -> Roda cade nel not_found con messaggio fuorviante
-    it 'con data valida ma senza dati risponde 404 "Api non trovata"' do
+    # Contratto scelto per MED-001: data valida ma senza dati -> 200 con
+    # FeatureCollection vuota (prima: nil -> 404 fuorviante del plugin not_found)
+    it 'con data valida ma senza dati risponde 200 con FeatureCollection vuota' do
       get "/api/v1/remits/#{DateFixtures::GIORNO_SENZA_DATI}/centrali"
 
-      expect(last_response.status).to eq(404)
-      expect(json_body['error']).to include('non trovata')
+      expect(last_response.status).to eq(200)
+      expect(json_body['type']).to eq('FeatureCollection')
+      expect(json_body['features']).to eq([])
     end
   end
 
