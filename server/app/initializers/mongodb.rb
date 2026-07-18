@@ -27,7 +27,10 @@ class Mongodb
     client = Mongo::Client.new(Settings.database.adress,
                                database: Settings.database.name,
                                write: { w: 0, j: false },
-                               wait_queue_timeout: 3,
+                               # 3s era troppo aggressivo: al boot i warm-up aprono ~40 thread
+                               # e con l'apertura connessioni lenta la coda superava il timeout
+                               # (ConnectionCheckOutTimeout); il default del driver è 10s
+                               wait_queue_timeout: 30,
                                min_pool_size: 10,
                                max_pool_size: 50)
     client.database_names
