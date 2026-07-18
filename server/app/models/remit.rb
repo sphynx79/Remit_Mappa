@@ -12,6 +12,7 @@ class Remit < Mongodb
       @@expiration_time ||= expiration_time
       # Concurrent::Map: la cache è letta/scritta da Puma, dai TimerTask e da Parallel (HIGH-006)
       @@cache ||= Concurrent::Map.new
+      @@warmup_pendente ||= Concurrent::Map.new
       Concurrent::Promise.new{refresh_cache_around_today}.then{delete_expired_key }.execute
     end
 
@@ -20,10 +21,13 @@ class Remit < Mongodb
       @@cache.compute_if_absent(key) do
         # puts "did not find key #{key} in cache, fetch from db ..."
         # il warm-up dei giorni attorno serve solo per la navigazione sulle date correnti:
-        # sulle date storiche basta il fetch puntuale della key richiesta (MED-004)
-        if (Date.today - Date.strptime(key, "%d-%m-%Y")).abs <= 30
+        # sulle date storiche basta il fetch puntuale della key richiesta (MED-004).
+        # Un solo warm-up pendente alla volta (riarmabile), per non saturare il pool Mongo
+        if (Date.today - Date.strptime(key, "%d-%m-%Y")).abs <= 30 && @@warmup_pendente.put_if_absent(:remit, true).nil?
           Concurrent::ScheduledTask.execute(4) do
               refresh_cache_around_day(data: Date.strptime(key,"%d-%m-%Y"), keep_old: true,  keep_day: false, around_before: 10, around_after: 10)
+          ensure
+            @@warmup_pendente.delete(:remit)
           end
         end
         { value: fetch_from_db(key), expiration_time: Time.now.to_i + @@expiration_time }

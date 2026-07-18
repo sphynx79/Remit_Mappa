@@ -6,6 +6,7 @@ class Report < Mongodb
   class << self
     def refresh_cache(expiration_time: 240)
       @@cache           ||= {}
+      @@warmup_pendente ||= Concurrent::Map.new
       @@expiration_time ||= expiration_time
 
       %i[centrali_tecnologia_daily centrali_zona_daily centrali_tecnologia_hourly centrali_zona_hourly].each do |cache_type|
@@ -25,9 +26,14 @@ class Report < Mongodb
         # storiche basta il fetch puntuale della key richiesta (MED-004)
         around_before, around_after = (cache_type.to_s.include? 'daily') ?  [30,15] : [15,7]
         date_time = (cache_type.to_s.include? 'daily') ? DateTime.strptime(key, '%d-%m-%Y') : DateTime.strptime(key, '%d-%m-%Y %H:%M:%S')
-        if (Date.today - date_time.to_date).abs <= 30
+        # un solo warm-up pendente alla volta per tipo (riarmabile a fine corsa):
+        # su cache fredda un range grande genera centinaia di miss e senza questo
+        # freno ogni miss lancerebbe il suo warm-up saturando il pool Mongo
+        if (Date.today - date_time.to_date).abs <= 30 && @@warmup_pendente.put_if_absent(cache_type, true).nil?
           Concurrent::ScheduledTask.execute(5) do
               refresh_cache_around_day(data: date_time, cache_type: cache_type, keep_old: true, keep_day: false, around_before: around_before, around_after: around_after)
+          ensure
+            @@warmup_pendente.delete(cache_type)
           end
         end
         { value: fetch_from_db(key, cache_type), expiration_time: Time.now.to_i + @@expiration_time }
