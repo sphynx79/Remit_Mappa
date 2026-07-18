@@ -1,4 +1,4 @@
-## Non rilasciato (post 1.8.2)
+## 1.9.0 (2026-07-18)
 ### Fixed
 -  Server: JSON valido ("[]") sui report in cache con date senza dati, prima usciva "[,,,,]" non parsabile [HIGH-001]  ( 2026-07-18 ) [ sphynx79]
 -  Server: 200 con FeatureCollection vuota su remits centrali con data valida senza dati, prima 404 fuorviante [MED-001]  ( 2026-07-18 ) [ sphynx79]
