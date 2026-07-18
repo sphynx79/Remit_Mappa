@@ -15,7 +15,9 @@ cat > "$conf" <<-EOF
   [req_distinguished_name]
   CN = $name
   [v3_req]
-  keyUsage = keyEncipherment, dataEncipherment
+  # digitalSignature necessario per i cipher ECDHE: senza, Chrome/Vivaldi
+  # rifiutano il certificato con ERR_SSL_KEY_USAGE_INCOMPATIBLE
+  keyUsage = digitalSignature, keyEncipherment, dataEncipherment
   extendedKeyUsage = serverAuth
   subjectAltName = @alt_names
   [alt_names]
