@@ -4,6 +4,10 @@
 
 require 'pathname'
 
+# stdout senza buffering: lanciato via mise/script lo stdout è una pipe e i puts
+# (es. "Refresh cache ... in:") resterebbero nel buffer senza mai comparire
+$stdout.sync = true
+
 APP_ROOT = Pathname.new(File.expand_path(__dir__)).freeze
 APP_NAME = APP_ROOT.basename.to_s.freeze
 VERSION = File.read(File.expand_path('../VERSION', __dir__)).strip
