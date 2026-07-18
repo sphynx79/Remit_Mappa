@@ -51,6 +51,7 @@ group :development, :test do
   gem 'rubocop', '~>1.88', require: false
   gem 'rubocop-performance', '~>1.26', require: false
   gem 'rufo', '~>0.18', require: false
+  gem 'solargraph', '~>0.60.1', require: false
 end
 
 group :test do
