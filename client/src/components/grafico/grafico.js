@@ -685,6 +685,8 @@ class Grafico {
         state.dimensions = []
         state.source = []
         state.elId = attrs.elId
+        // ferma il reactor su attrs.data allo smontaggio (react() non ritorna un handle)
+        state.$smontato = atom(false)
 
         state.background = {
             type: "linear",
@@ -788,21 +790,28 @@ class Grafico {
         })
         state.resizeObserver.observe(dom)
 
-        attrs.data.react(resp => {
-            resp.then(remit => {
-                state.dimensions = Object.keys(remit[0])
-                state.source = remit
-                myChart.setOption({
-                    dataset: {
-                        dimensions: state.dimensions,
-                        source: state.source,
-                    },
-                    series: this._Series(),
+        attrs.data.react(
+            resp => {
+                // guardia anti-race: si applica solo la risposta dell'ultima richiesta vista
+                // (le Promise possono risolversi fuori ordine al cambio data rapido)
+                state.ultimaRichiesta = resp
+                resp.then(remit => {
+                    if (state.ultimaRichiesta !== resp) return
+                    state.dimensions = Object.keys(remit[0])
+                    state.source = remit
+                    myChart.setOption({
+                        dataset: {
+                            dimensions: state.dimensions,
+                            source: state.source,
+                        },
+                        series: this._Series(),
+                    })
+                }).catch(err => {
+                    console.log(`Errore richiesta json remit`, err)
                 })
-            }).catch(err => {
-                console.log(`Errore richiesta json remit`, err)
-            })
-        })
+            },
+            { until: state.$smontato }
+        )
 
         if (process.env.NODE_ENV !== "production") {
             let logStateAttrs = {
@@ -814,6 +823,7 @@ class Grafico {
     }
 
     onremove({ state }) {
+        state.$smontato.set(true)
         if (state.resizeObserver) state.resizeObserver.disconnect()
         if (state.chart) state.chart.dispose()
     }

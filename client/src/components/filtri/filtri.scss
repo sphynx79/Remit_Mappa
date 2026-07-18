@@ -66,3 +66,59 @@
     padding-top: 0.3rem;
     padding-bottom: 0.3rem;
 }
+
+/* Stili per-filtro, consolidati qui dagli scss/css dei wrapper filtro_* eliminati
+   (i selettori #filtro_x puntano ai content_id renderizzati da FiltriItem) */
+
+#filtro_data .bx--form-item:last-of-type {
+    margin-bottom: 0.7rem;
+}
+
+#filtro_linee {
+    .bx--checkbox-label {
+        min-height: 1rem;
+    }
+    .bx--checkbox-wrapper {
+        padding-bottom: 12px;
+    }
+}
+
+#filtro_tecnologia {
+    .bx--form-item {
+        display: flex;
+        justify-content: space-between;
+        margin-bottom: 1.8rem;
+        flex-direction: column;
+        > .bx--checkbox-wrapper {
+            margin-bottom: 7px;
+        }
+    }
+
+    .bx--form-item:first-of-type {
+        margin-top: 8px;
+    }
+}
+
+#filtro_msd {
+    .bx--form-item {
+        > .bx--radio-button-group {
+            padding-bottom: 12px;
+            margin-top: 0;
+        }
+    }
+}
+
+#filtro_sottotipo,
+#filtro_societa,
+#filtro_impianto,
+#filtro_unita {
+    --space: 4rem;
+}
+
+.bx--accordion__item--active > #filtro_sottotipo,
+.bx--accordion__item--active > #filtro_societa,
+.bx--accordion__item--active > #filtro_impianto,
+.bx--accordion__item--active > #filtro_unita {
+    height: var(--space);
+    transition: height 0.2s;
+}

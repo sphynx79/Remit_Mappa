@@ -13,6 +13,13 @@ module Mapbox
     @@centrali ||= klass.get_centrali
     @@linee_380 ||= Oj.load(klass.get_json_data(@@dataset_linee380_url), mode: :compat)['features']
     @@linee_220 ||= Oj.load(klass.get_json_data(@@dataset_linee220_url), mode: :compat)['features']
+  rescue NoMethodError, EncodingError # Oj solleva EncodingError sul JSON non valido
+    warn <<~MESSAGE
+      I dataset Mapbox non hanno il formato atteso (manca "features"):
+      1) Controllare che MAPBOX_API_TOKEN sia un token valido
+      2) Controllare che i dataset esistano ancora sull'account Mapbox
+    MESSAGE
+    raise
   end
 
   def centrali
@@ -55,5 +62,12 @@ module Mapbox
     http.use_ssl = true
     http.verify_mode = OpenSSL::SSL::VERIFY_NONE
     http.get(uri.request_uri).body
+  rescue SocketError, SystemCallError, Net::OpenTimeout, Net::ReadTimeout, OpenSSL::SSL::SSLError
+    warn <<~MESSAGE
+      Non riesco a scaricare i dataset Mapbox da #{uri.host}:
+      1) Controllare la connessione di rete / proxy verso api.mapbox.com
+      2) Controllare che MAPBOX_API_TOKEN sia valido
+    MESSAGE
+    raise
   end
 end

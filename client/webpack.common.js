@@ -57,7 +57,8 @@ module.exports = {
             m: "mithril", //Global access
             noUiSlider: "nouislider",
             MainLoop: "mainloop.js",
-            echarts: "echarts",
+            // shim locale: registra i moduli echarts usati (use) e riesporta il core
+            echarts: resolve(__dirname, "src/init/echarts.js"),
             dayjs: "dayjs",
             derive: ["derivable", "derive"],
             atom: ["derivable", "atom"],

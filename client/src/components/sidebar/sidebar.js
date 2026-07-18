@@ -21,17 +21,25 @@ class SideBar {
         return request
     }
 
-    oninit({ state }) {
-        let startDtDaily = derive(() => dayjs(appState.$data.get()).subtract(6, "month").format("DD-MM-YYYY"))
-        let endDtDaily = derive(() => dayjs(appState.$data.get()).add(1, "month").format("DD-MM-YYYY"))
-        let startDtHourly = derive(() => dayjs(appState.$data.get()).subtract(6, "day").format("DD-MM-YYYY"))
-        let endDtHourly = derive(() => dayjs(appState.$data.get()).add(1, "day").format("DD-MM-YYYY"))
-        state.$remitCentraliTecnologiaDaily = derive(() => state._getRemit(`${appState.protocollo}://${appState.server}:${appState.port}/api/v1/reports/${startDtDaily.get()}/${endDtDaily.get()}/centrali_tecnologia_daily${appState.cache}`))
-        state.$remitCentraliTecnologiaHourly = derive(() =>
-            state._getRemit(`${appState.protocollo}://${appState.server}:${appState.port}/api/v1/reports/${startDtHourly.get()}/${endDtHourly.get()}/centrali_tecnologia_hourly${appState.cache}`)
-        )
-        state.$remitCentraliZonaDaily = derive(() => state._getRemit(`${appState.protocollo}://${appState.server}:${appState.port}/api/v1/reports/${startDtDaily.get()}/${endDtDaily.get()}/centrali_zona_daily${appState.cache}`))
-        state.$remitCentraliZonaHourly = derive(() => state._getRemit(`${appState.protocollo}://${appState.server}:${appState.port}/api/v1/reports/${startDtHourly.get()}/${endDtHourly.get()}/centrali_zona_hourly${appState.cache}`))
+    oninit({ attrs, state }) {
+        // i report servono solo ai grafici, che stanno nella sidebar sinistra
+        if (attrs.type == "right") return
+        // atomi + react esplicita (pattern di datapicker.js): le derive con side effect
+        // HTTP rendevano non deterministico il numero di richieste per cambio data
+        state.$remitCentraliTecnologiaDaily = atom()
+        state.$remitCentraliTecnologiaHourly = atom()
+        state.$remitCentraliZonaDaily = atom()
+        state.$remitCentraliZonaHourly = atom()
+        appState.$data.react(data => {
+            let startDtDaily = dayjs(data).subtract(6, "month").format("DD-MM-YYYY")
+            let endDtDaily = dayjs(data).add(1, "month").format("DD-MM-YYYY")
+            let startDtHourly = dayjs(data).subtract(6, "day").format("DD-MM-YYYY")
+            let endDtHourly = dayjs(data).add(1, "day").format("DD-MM-YYYY")
+            state.$remitCentraliTecnologiaDaily.set(state._getRemit(`${appState.protocollo}://${appState.server}:${appState.port}/api/v1/reports/${startDtDaily}/${endDtDaily}/centrali_tecnologia_daily${appState.cache}`))
+            state.$remitCentraliTecnologiaHourly.set(state._getRemit(`${appState.protocollo}://${appState.server}:${appState.port}/api/v1/reports/${startDtHourly}/${endDtHourly}/centrali_tecnologia_hourly${appState.cache}`))
+            state.$remitCentraliZonaDaily.set(state._getRemit(`${appState.protocollo}://${appState.server}:${appState.port}/api/v1/reports/${startDtDaily}/${endDtDaily}/centrali_zona_daily${appState.cache}`))
+            state.$remitCentraliZonaHourly.set(state._getRemit(`${appState.protocollo}://${appState.server}:${appState.port}/api/v1/reports/${startDtHourly}/${endDtHourly}/centrali_zona_hourly${appState.cache}`))
+        })
     }
 
     view({ attrs, state }) {

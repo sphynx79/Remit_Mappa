@@ -19,7 +19,7 @@ class FiltriItem {
                 ),
                 m("p.bx--accordion__title.bx--type-epsilon", attrs.content_title),
             ]),
-            m(`.bx--accordion__content[id='${attrs.content_id}']`, m(attrs.content)),
+            m(`.bx--accordion__content[id='${attrs.content_id}']`, m(attrs.content, attrs.content_attrs || {})),
         ])
     }
 

@@ -1,15 +1,17 @@
-require: rubocop-performance
+plugins: rubocop-performance
 
 AllCops:
+  NewCops: disable
+  SuggestExtensions: false
   Exclude:
     - 'vendor/**/*'
     - 'bin/**/*'
     - '.rblcl/**/*'
     - '.git/**/*'
     - '.vscode/**/*'
-  TargetRubyVersion: 2.6.3
+  TargetRubyVersion: 4.0
 
-Metrics/LineLength:
+Layout/LineLength:
   Max: 130
 
 Style/NumericLiterals:
@@ -18,7 +20,10 @@ Style/NumericLiterals:
 Layout/SpaceBeforeBlockBraces:
   EnforcedStyle: space
 
-Layout/SpaceInsideBrackets:
+Layout/SpaceInsideArrayLiteralBrackets:
+  Enabled: false
+
+Layout/SpaceInsideReferenceBrackets:
   Enabled: false
 
 Style/Documentation:

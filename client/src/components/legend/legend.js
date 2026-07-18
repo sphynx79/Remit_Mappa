@@ -3,7 +3,7 @@
 import "./legend.scss"
 import { Tile } from "carbon-components"
 
-class Leggend {
+class Legend {
     constructor() {
         if (process.env.NODE_ENV !== "production") {
             this._componentName = this.constructor.name
@@ -43,7 +43,7 @@ class Leggend {
 
     oncreate(vnode) {
         let el = vnode.dom
-        vnode.tile = Tile.create(el)
+        vnode.state.tile = Tile.create(el)
         if (process.env.NODE_ENV !== "production") {
             let logStateAttrs = {
                 attrs: vnode.attrs,
@@ -52,6 +52,10 @@ class Leggend {
             console.log(`Component: ${this._componentName}`, logStateAttrs)
         }
     }
+
+    onremove({ state }) {
+        if (state.tile) state.tile.release()
+    }
 }
 
-export default Leggend
+export default Legend

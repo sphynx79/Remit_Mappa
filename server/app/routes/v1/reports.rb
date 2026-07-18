@@ -5,9 +5,11 @@ V1::Api.route("reports") do |r|
   def get_value(start_dt, end_dt, step, type)
     # la ricerca nella cache ha sempre la key nel timezone italiano
     key_format = (type.to_s.include? 'daily') ?  "%d-%m-%Y" : "%d-%m-%Y %H:%M:%S"
-    reseult = start_dt.step(end_dt, step).reduce("[".dup) do |cum, data| 
-        cum << "#{Report.get_remit(cache: true, type: type, data: data.strftime(key_format))},"
-    end[0..-2] << "]"
+    # le date senza dati ritornano nil e vanno saltate, altrimenti il JSON esce malformato ("[,,,,]")
+    values = start_dt.step(end_dt, step).map do |data|
+      Report.get_remit(cache: true, type: type, data: data.strftime(key_format))
+    end.compact
+    "[#{values.join(',')}]"
   end
 
   r.on String, String do |start_dt, end_dt|

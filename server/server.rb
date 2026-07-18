@@ -2,9 +2,15 @@
 # warn_indent: true
 # frozen_string_literal: true
 
+require 'pathname'
+
+# stdout senza buffering: lanciato via mise/script lo stdout è una pipe e i puts
+# (es. "Refresh cache ... in:") resterebbero nel buffer senza mai comparire
+$stdout.sync = true
+
 APP_ROOT = Pathname.new(File.expand_path(__dir__)).freeze
 APP_NAME = APP_ROOT.basename.to_s.freeze
-VERSION = File.read('../VERSION').strip
+VERSION = File.read(File.expand_path('../VERSION', __dir__)).strip
 
 require 'tzinfo'
 ENV['TZ'] = 'UTC'
@@ -12,7 +18,7 @@ TZ = TZInfo::Timezone.get('Europe/Rome')
 
 env = ENV['RACK_ENV'] || 'development'
 
-ENV['BUNDLE_GEMFILE'] ||= File.expand_path('../Gemfile', __dir__)
+ENV['BUNDLE_GEMFILE'] ||= File.expand_path('Gemfile', __dir__)
 require 'bundler/setup' if File.exist?(ENV['BUNDLE_GEMFILE'])
 Bundler.require(:default, env)
 

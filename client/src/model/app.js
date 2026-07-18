@@ -6,11 +6,13 @@ class App {
         this.server = window.location.hostname
         // controllo se usare la cache si o no dai parametri dell'url
         this.cache = /cache=(true|false)/.exec(window.location.href) ? `?${/cache=(true|false)/.exec(window.location.href)[0]}` : "?cache=true"
-        console.log(this.cache)
+        if (process.env.NODE_ENV !== "production") console.log(this.cache)
         // server configuration
         this.port = process.env.NODE_ENV == "production" ? window.location.port : PORTDEV
-        this.protocollo = [80, 9292].includes(this.port) || location.protocol === "http:" ? "http" : "https"
-        console.log(`Adress: ${this.protocollo}://${this.server}:${this.port}`)
+        // this.port è un numero in dev (PORTDEV) e una stringa in produzione (location.port):
+        // il confronto va fatto su stringhe, altrimenti in produzione non matcha mai
+        this.protocollo = ["80", "9292"].includes(String(this.port)) || location.protocol === "http:" ? "http" : "https"
+        if (process.env.NODE_ENV !== "production") console.log(`Address: ${this.protocollo}://${this.server}:${this.port}`)
         // sidebar state to interact with burger with sidebar, in layout.js
         this.sidebarLeft = false
         this.sidebarRight = false
@@ -73,15 +75,15 @@ class App {
         this.$solareVisibility.get() && filterArray.push({ tipo: "SOLARE", pmin: this.$solarePminPmax.get()[0], pmax: this.$solarePminPmax.get()[1] })
         this.$pompaggiVisibility.get() && filterArray.push({ tipo: "POMPAGGIO", pmin: this.$pompaggiPminPmax.get()[0], pmax: this.$pompaggiPminPmax.get()[1] })
         this.$geotermicoVisibility.get() && filterArray.push({ tipo: "GEOTERMICO", pmin: this.$geotermicoPminPmax.get()[0], pmax: this.$geotermicoPminPmax.get()[1] })
-        let filterArrayLenght = filterArray.length
+        let filterArrayLength = filterArray.length
         let centrali = this.$lista_centrali.get()
-        let centraliLenght = centrali.length
+        let centraliLength = centrali.length
         let centraliFiltered = []
 
-        for (let i = 0; i < centraliLenght; i++) {
+        for (let i = 0; i < centraliLength; i++) {
             let centrale = centrali[i]
 
-            for (let y = 0; y < filterArrayLenght; y++) {
+            for (let y = 0; y < filterArrayLength; y++) {
                 let filter = filterArray[y]
                 let min = centrale["tipo"] === "POMPAGGIO" ? centrale["pmin"] : centrale["pmax"]
                 if (centrale["tipo"] === filter.tipo && min >= filter.pmin && centrale["pmax"] <= filter.pmax) {
@@ -144,27 +146,25 @@ class App {
     }
 
     getRemit(url) {
+        // guardia anti-race: se nel frattempo la data è cambiata, la risposta è stantia
+        // e non va applicata (le richieste possono completare fuori ordine)
+        let dataRichiesta = this.$data.get()
         // prettier-ignore
         m.request({
                 method: "GET",
                 url: url,
             })
             .then(response => {
-                switch (url) {
-                  case String(url.match(/.*\/remits\/.*\/centrali/)):
+                if (this.$data.get() !== dataRichiesta) return
+                if (/.*\/remits\/.*\/centrali/.test(url)) {
                     this.$remit_centrali.set(response)
-                    break
-                  case String(url.match(/.*\/remits\/.*\/linee\/220/)):
+                } else if (/.*\/remits\/.*\/linee\/220/.test(url)) {
                     this.$remit_220.set(response)
-                    break
-                  case String(url.match(/.*\/remits\/.*\/linee\/380/)):
+                } else if (/.*\/remits\/.*\/linee\/380/.test(url)) {
                     this.$remit_380.set(response)
-                    break
-                  default:
+                } else {
                     console.log("Didn't match")
-                    break
                 }
-                
             })
             .catch(err => {
                 console.log(`Errore richiesta json remit  ${url}`, err)

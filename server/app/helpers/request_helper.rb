@@ -21,7 +21,13 @@ module RequestHelpers
   end
 
   def data_is_correct(data)
-    (/(^([0-2][0-9]|(3)[0-1])(-)(((0)[0-9])|((1)[0-2]))(-)\d{4}$)|(^([12]\d{3}-(0[1-9]|1[0-2])-(0[1-9]|[12]\d|3[01]))$)/ =~ data).nil?
+    return true if (/(^([0-2][0-9]|(3)[0-1])(-)(((0)[0-9])|((1)[0-2]))(-)\d{4}$)|(^([12]\d{3}-(0[1-9]|1[0-2])-(0[1-9]|[12]\d|3[01]))$)/ =~ data).nil?
+
+    # la regex lascia passare date impossibili (es. 31-02-2018): il parse reale le respinge
+    Date.parse(data)
+    false
+  rescue ArgumentError
+    true
   end
 
   def json(body = {})
