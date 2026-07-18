@@ -69,9 +69,15 @@ class Report < Mongodb
 
     def refresh_cache_around_today(cache_type)
       prima = Time.now
-      around_before, around_after = (cache_type.to_s.include? 'daily') ?  [365,180] : [180,30] 
+      around_before, around_after = (cache_type.to_s.include? 'daily') ?  [365,180] : [180,30]
+      puts "Refresh cache #{cache_type} avviato (#{around_before + around_after + 1} giorni)..."
       refresh_cache_around_day(data: Date.today.to_datetime, cache_type: cache_type, keep_old: false, keep_day: true, around_before: around_before, around_after: around_after)
       puts "Refresh cache #{cache_type} in: #{Time.now - prima}"
+    rescue StandardError => e
+      # il warm-up gira dentro una Promise che inghiotte le eccezioni: senza questa
+      # stampa un fallimento sarebbe invisibile
+      puts "Refresh cache #{cache_type} FALLITO: #{e.class}: #{e.message}"
+      raise
     end
 
     def delete_expired_key(cache_type)

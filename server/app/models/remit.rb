@@ -63,8 +63,14 @@ class Remit < Mongodb
       around_before = 180
       around_after  = 30
       today         = Date.today
+      puts "Refresh cache remits avviato (#{around_before + around_after + 1} giorni)..."
       refresh_cache_around_day(data: today, keep_old: false, keep_day: true, around_before: around_before, around_after: around_after)
       puts "Refresh cache remits in: #{Time.now - prima}"
+    rescue StandardError => e
+      # il warm-up gira dentro una Promise che inghiotte le eccezioni: senza questa
+      # stampa un fallimento sarebbe invisibile
+      puts "Refresh cache remits FALLITO: #{e.class}: #{e.message}"
+      raise
     end
 
     def delete_expired_key
