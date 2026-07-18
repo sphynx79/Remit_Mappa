@@ -39,6 +39,22 @@ MongoDB 4.0.x come server dati.
    npm run start
    ```
 
+## Task mise
+
+I flussi di lavoro sono definiti come task nel `mise.toml` di root (`mise tasks` per l'elenco):
+
+```
+mise run db-test        # avvia il MongoDB di test su :27030
+mise run server-dev     # API server di sviluppo su :9292
+mise run client-dev     # webpack dev server su :9001
+mise run test           # suite RSpec
+mise run coverage       # suite con report coverage (soglia 88%)
+mise run lint           # rubocop + eslint
+mise run bundle-prod    # build di produzione + copia in server/public
+mise run server-prod    # avvio produzione (config per-host se presente)
+mise run db-test-stop   # arresto pulito del MongoDB di test
+```
+
 ## Test e lint
 
 ```
