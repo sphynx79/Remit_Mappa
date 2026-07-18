@@ -50,17 +50,17 @@
 
     // Usage:  Load different file types with one callback
     Promise.all([
-      <!-- load.css("https://cdn.jsdelivr.net/npm/mapbox-gl@1.1.1/dist/mapbox-gl.css"), -->
+      // load.css("https://cdn.jsdelivr.net/npm/mapbox-gl@1.1.1/dist/mapbox-gl.css"),
       load.css("https://cdn.jsdelivr.net/npm/mapbox-gl@3.25.0/dist/mapbox-gl.min.css"),
       load.css("css/vendor.css"),
       load.css("css/main.css"),
-      <!-- load.js("https://cdn.jsdelivr.net/npm/mapbox-gl@1.1.1/dist/mapbox-gl.js"), -->
+      // load.js("https://cdn.jsdelivr.net/npm/mapbox-gl@1.1.1/dist/mapbox-gl.js"),
       load.js("https://cdn.jsdelivr.net/npm/mapbox-gl@3.25.0/dist/mapbox-gl.min.js"),
       load.js("./js/manifest-bundle.js"),
       load.js("js/vendor-bundle.js"),
-      <!-- load.img('images/logo.png') -->
+      // load.img('images/logo.png')
     ]).then(function() {
-      load.js('js/main-bundle.js'),
+      load.js('js/main-bundle.js');
       console.log('Everything has loaded!');
     }).catch(function() {
       console.log('Oh no, epic failure!');

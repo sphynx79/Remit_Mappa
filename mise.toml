@@ -1,22 +1,84 @@
-# mise.toml del plugin trinity — runtime del SERVIZIO Hindsight (server MCP :8888).
+# mise.toml di Remit_Mappa — runtime del progetto (mappa REMIT: server Roda + client Mithril).
 #
-# Questo file NON è caricato automaticamente da Claude Code né da mise nei progetti:
-# viene usato esplicitamente dagli hook del plugin via `mise -C <plugin_root> run <task>`
-# (vedi hooks/hindsight/hindsight-ensure-up.sh). Hindsight è un singleton di macchina:
-# l'env qui sotto serve SOLO al processo server al momento del lancio, i progetti
-# parlano con il server già configurato via HTTP.
-#
-# La dashboard log (Roda/Puma), i benchmark (embed-bench/rerank-bench) e i check
-# aggiornamenti (api-check/cp-check, in scheduler/) sono stati migrati
-# qui dal repo Trinity. I task relativi sono in fondo a questo file.
+# Definisce i runtime usati in sviluppo:
+# - ruby 4.0.1: backend Roda/Puma in server/ (bundle install, rspec, rubocop)
+# - node lts:   build e dev server del client in client/ (webpack, eslint)
+# - python:     script di supporto occasionali
 
 [tools]
 python = "3.13"
-# Node nativo Windows: serve per il Control Plane di Hindsight (app Next.js avviata
-# via `npx @vectorize-io/hindsight-control-plane`). NB: l'npx del Node MSYS2 UCRT64
-# (/ucrt64/bin) crasha (segfault/bad_weak_ptr) — questo Node mise lo rimpiazza.
 node = "lts"
-# Ruby per la dashboard log (Roda/Puma): `bundle install` e `puma` girano con questo
-# Ruby gestito da mise, NON quello MSYS2 (le gem vanno installate con lo stesso Ruby
-# che le esegue). L'hook reshim richiede `mise` nel PATH — garantito da _.path in [env].
 ruby = "4.0.1"
+
+# ---------------------------------------------------------------------------
+# Task di progetto: `mise tasks` per l'elenco, `mise run <task>` per eseguirli
+# ---------------------------------------------------------------------------
+
+[tasks.bundle-prod]
+description = "Build di produzione del client e copia in server/public"
+dir = "client"
+run = ["npm run build", "ruby ../script/copia_public.rb"]
+
+# I server partono DETACHED (setsid nohup, log su file) e si fermano coi task
+# di stop: su Windows la catena mise/cmd resta appesa dopo il Ctrl-C dei task
+# foreground, lasciando il terminale inutilizzabile
+[tasks.server-dev]
+description = "Avvia in background l'API server di sviluppo su :9292 (log: server/log/puma_dev.log)"
+run = "bash script/avvia_server.sh dev"
+
+[tasks.server-prod]
+description = "Avvia in background lo stack di produzione, Puma SSL + Caddy (log: server/log/puma_prod.log)"
+run = "bash script/avvia_server.sh prod"
+
+[tasks.server-stop]
+description = "Ferma Puma (dev/prod) e Caddy"
+run = "bash script/ferma_server.sh"
+
+[tasks.client-dev]
+description = "Webpack dev server con hot reload su :9001 (foreground: chiudere col task client-stop o chiudendo il pannello)"
+dir = "client"
+raw = true
+run = "npm run start"
+
+[tasks.test]
+description = "Suite RSpec del server (richiede il mongod di test attivo su :27030)"
+dir = "server"
+run = "bundle exec rspec"
+
+[tasks.coverage]
+description = "Suite RSpec con report coverage (soglia minima 88%, report in server/coverage)"
+dir = "server"
+env = { RUN_COVERAGE_REPORT = "1" }
+run = "bundle exec rspec"
+
+[tasks.lint-server]
+description = "RuboCop sul server"
+dir = "server"
+run = "bundle exec rubocop"
+
+[tasks.lint-client]
+description = "ESLint sul client"
+dir = "client"
+run = "npx eslint src"
+
+[tasks.lint]
+description = "Lint completo (rubocop + eslint)"
+depends = ["lint-server", "lint-client"]
+
+[tasks.db-test]
+description = "Avvia in background il MongoDB di test su :27030 (snapshot locale, mai il DB di produzione)"
+run = "bash script/avvia_db.sh test"
+
+[tasks.db-test-stop]
+description = "Arresto pulito del MongoDB di test (DB senza journal: mai kill brusco)"
+run = 'C:/Appl/Mongodb/bin/mongo.exe --port 27030 admin --eval "db.shutdownServer()"'
+
+# NB: bind anche su 127.0.0.1 oltre all'hostname: senza, MongoDB rifiuta lo
+# shutdownServer remoto e l'arresto pulito sarebbe impossibile
+[tasks.db-prod]
+description = "Avvia in background il MongoDB di PRODUZIONE su :27018 (dati E:/Desktop/Ampere/DB, journal attivo)"
+run = "bash script/avvia_db.sh prod"
+
+[tasks.db-prod-stop]
+description = "Arresto pulito del MongoDB di produzione"
+run = 'C:/Appl/Mongodb/bin/mongo.exe --port 27018 admin --eval "db.shutdownServer()"'

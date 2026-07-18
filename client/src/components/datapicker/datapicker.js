@@ -13,14 +13,19 @@ class DataPicker {
     }
 
     oninit({ state }) {
-        appState.$data.react(data => {
-            let urlLinee220 = `${appState.protocollo}://${appState.server}:${appState.port}/api/v1/remits/${data}/linee/220`
-            let urlLinee380 = `${appState.protocollo}://${appState.server}:${appState.port}/api/v1/remits/${data}/linee/380`
-            let urlCentrali = `${appState.protocollo}://${appState.server}:${appState.port}/api/v1/remits/${data}/centrali`
-            appState.dispatch("getRemit", [urlLinee220])
-            appState.dispatch("getRemit", [urlLinee380])
-            appState.dispatch("getRemit", [urlCentrali])
-        })
+        // ferma il reactor su $data allo smontaggio (react() non ritorna un handle)
+        state.$smontato = atom(false)
+        appState.$data.react(
+            data => {
+                let urlLinee220 = `${appState.protocollo}://${appState.server}:${appState.port}/api/v1/remits/${data}/linee/220`
+                let urlLinee380 = `${appState.protocollo}://${appState.server}:${appState.port}/api/v1/remits/${data}/linee/380`
+                let urlCentrali = `${appState.protocollo}://${appState.server}:${appState.port}/api/v1/remits/${data}/centrali`
+                appState.dispatch("getRemit", [urlLinee220])
+                appState.dispatch("getRemit", [urlLinee380])
+                appState.dispatch("getRemit", [urlCentrali])
+            },
+            { until: state.$smontato }
+        )
     }
 
     view({ attrs, state }) {
@@ -82,6 +87,11 @@ class DataPicker {
             }
             console.log(`Component: ${this._componentName}`, logStateAttrs)
         }
+    }
+
+    onremove({ state }) {
+        state.$smontato.set(true)
+        if (state.picker) state.picker.release()
     }
 }
 

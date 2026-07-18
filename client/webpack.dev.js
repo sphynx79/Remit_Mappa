@@ -81,7 +81,6 @@ module.exports = merge(common, {
             favicon: "./images/ampere.png",
         }),
         new webpack.DefinePlugin({
-            NEXT: JSON.stringify(process.env.next),
             PORTDEV: JSON.stringify(port),
         }),
         new webpack.WatchIgnorePlugin({ paths: [resolve(__dirname, "node_modules")] }),

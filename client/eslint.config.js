@@ -19,7 +19,6 @@ module.exports = [
                 derive: "readonly",
                 atom: "readonly",
                 lens: "readonly",
-                NEXT: "readonly",
                 PORTDEV: "readonly",
             },
         },

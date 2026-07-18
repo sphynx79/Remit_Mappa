@@ -36,7 +36,7 @@ module Logging
   # @yield optionally set the message using a block
   def info(string = nil, &block)
     if block_given?
-      logger.debug(self.class.name, &block)
+      logger.info(self.class.name, &block)
     else
       logger.info(self.class.name) { string }
     end

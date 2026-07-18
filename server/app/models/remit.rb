@@ -5,21 +5,38 @@ class Remit < Mongodb
   # mattr :cache_remit
   cattr :cache
 
+  # inizializzazione al load della classe (non lazy in refresh_cache): nei primi
+  # secondi dopo il boot le richieste arrivano PRIMA del job di warm-up, e con
+  # @@cache nil andavano in 500. Concurrent::Map perche' letta/scritta da Puma,
+  # TimerTask e Parallel (HIGH-006)
+  @@cache            = Concurrent::Map.new
+  @@warmup_pendente  = Concurrent::Map.new
+  @@expiration_time  = 240
+
   class << self
 
     def refresh_cache(expiration_time: 240)
       # print "Refresh cache .......\n"
-      @@expiration_time ||= expiration_time
-      around_before = 10
-      around_after  = 10
-      @@cache ||= Hash.new do |hash, key|
-        # puts "did not find key #{key} in cache, fetch from db ..."
-        Concurrent::ScheduledTask.execute(4) do
-            refresh_cache_around_day(data: Date.strptime(key,"%d-%m-%Y"), keep_old: true,  keep_day: false, around_before: around_before, around_after: around_after)
-        end
-        @@cache[key] = { value: fetch_from_db(key), expiration_time: Time.now.to_i + @@expiration_time }
-      end
+      @@expiration_time = expiration_time
       Concurrent::Promise.new{refresh_cache_around_today}.then{delete_expired_key }.execute
+    end
+
+    # miss atomico: compute_if_absent garantisce un solo fetch per key anche sotto concorrenza
+    def fetch_from_cache(key)
+      @@cache.compute_if_absent(key) do
+        # puts "did not find key #{key} in cache, fetch from db ..."
+        # il warm-up dei giorni attorno serve solo per la navigazione sulle date correnti:
+        # sulle date storiche basta il fetch puntuale della key richiesta (MED-004).
+        # Un solo warm-up pendente alla volta (riarmabile), per non saturare il pool Mongo
+        if (Date.today - Date.strptime(key, "%d-%m-%Y")).abs <= 30 && @@warmup_pendente.put_if_absent(:remit, true).nil?
+          Concurrent::ScheduledTask.execute(4) do
+              refresh_cache_around_day(data: Date.strptime(key,"%d-%m-%Y"), keep_old: true,  keep_day: false, around_before: 10, around_after: 10)
+          ensure
+            @@warmup_pendente.delete(:remit)
+          end
+        end
+        { value: fetch_from_db(key), expiration_time: Time.now.to_i + @@expiration_time }
+      end
     end
 
     def refresh_cache_around_day(data: nil, keep_old: false, keep_day: false, around_before: 30, around_after: 30)
@@ -46,14 +63,20 @@ class Remit < Mongodb
       around_before = 180
       around_after  = 30
       today         = Date.today
+      puts "Refresh cache remits avviato (#{around_before + around_after + 1} giorni)..."
       refresh_cache_around_day(data: today, keep_old: false, keep_day: true, around_before: around_before, around_after: around_after)
       puts "Refresh cache remits in: #{Time.now - prima}"
+    rescue StandardError => e
+      # il warm-up gira dentro una Promise che inghiotte le eccezioni: senza questa
+      # stampa un fallimento sarebbe invisibile
+      puts "Refresh cache remits FALLITO: #{e.class}: #{e.message}"
+      raise
     end
 
     def delete_expired_key
       # print "delete expired key to remit\n"
       now   = Time.now.to_i
-      @@cache.delete_if { |_, v| now > v[:expiration_time] }
+      @@cache.each_pair { |key, v| @@cache.delete(key) if now > v[:expiration_time] }
     end
 
     def get_remit_linee(start_dt, end_dt, volt)
@@ -64,7 +87,7 @@ class Remit < Mongodb
     end
 
     def get_remit_centrali(data)
-      @@cache[data][:value]
+      fetch_from_cache(data)[:value]
         # .yield_self { |remit| features_centrali(remit) }
         # .yield_self { |features| Hash[type: 'FeatureCollection', features: features] }
     end
