@@ -20,8 +20,13 @@
 -  Repo: chiavi/certificati TLS e server/package-lock.json spurio fuori dal tracking git [MED-012][LOW-007]  ( 2026-07-18 ) [ sphynx79]
 -  Tooling: config RuboCop riparata per RuboCop 1.88 [MED-010]; typo e flag NEXT morto rimossi [LOW-005]; log client gated su produzione [LOW-006]  ( 2026-07-18 ) [ sphynx79]
 -  Prod: config launcher unificate e parametriche su hostname (puma_prod.rb, gen_cert.sh, server.bat senza Ruby 2.5), verificate sull'host ENWS27719997 con stack completo Puma SSL + Caddy [MED-009][HIGH-004]  ( 2026-07-18 ) [ sphynx79]
+-  Server: cache inizializzate al load della classe (prima 500 nei primi secondi dopo il boot) e un solo warm-up pendente alla volta per tipo (prima i range grandi a cache fredda saturavano il pool Mongo)  ( 2026-07-18 ) [ sphynx79]
+-  Server: wait_queue_timeout del pool Mongo 3s -> 30s; messaggi di warm-up visibili (avvio, durata, eventuale fallimento prima inghiottito dalla Promise)  ( 2026-07-18 ) [ sphynx79]
+-  Prod: output di Caddy su server/log/caddy.log e chiusura automatica di Caddy allo stop di Puma (after_stopped)  ( 2026-07-18 ) [ sphynx79]
 ### Added
 -  Suite di test server RSpec + rack-test (60 spec: caratterizzazione API, unit su modelli/helper/logging, cache e concorrenza) con coverage 88% e soglia minima; task rake spec/rubocop  ( 2026-07-18 ) [ sphynx79]
+-  Task rake server_dev/server_prod (root e server/): avvio in foreground con Ctrl-C pulito, Puma in-process; Rakefile con bootstrap Bundler, bundle exec non piu necessario  ( 2026-07-18 ) [ sphynx79]
+-  Task mise di avvio in background (setsid nohup, log su file) con server-stop: la catena mise/cmd su Windows resta appesa dopo il Ctrl-C dei task foreground  ( 2026-07-18 ) [ sphynx79]
 -  Task mise di progetto (bundle-prod, server dev/prod, test, coverage, lint, db-test) con script di copia bundle e avvio produzione  ( 2026-07-18 ) [ sphynx79]
 -  README con istruzioni di avvio sviluppo (mongod di test, puma, webpack dev server, spec)  ( 2026-07-18 ) [ sphynx79]
 
