@@ -19,8 +19,10 @@
 -  Client: deduplicati i componenti filtro, wrapper eliminati e select unificata parametrizzata (-533 righe) [MED-013]  ( 2026-07-18 ) [ sphynx79]
 -  Repo: chiavi/certificati TLS e server/package-lock.json spurio fuori dal tracking git [MED-012][LOW-007]  ( 2026-07-18 ) [ sphynx79]
 -  Tooling: config RuboCop riparata per RuboCop 1.88 [MED-010]; typo e flag NEXT morto rimossi [LOW-005]; log client gated su produzione [LOW-006]  ( 2026-07-18 ) [ sphynx79]
+-  Prod: config launcher unificate e parametriche su hostname (puma_prod.rb, gen_cert.sh, server.bat senza Ruby 2.5), verificate sull'host ENWS27719997 con stack completo Puma SSL + Caddy [MED-009][HIGH-004]  ( 2026-07-18 ) [ sphynx79]
 ### Added
 -  Suite di test server RSpec + rack-test (60 spec: caratterizzazione API, unit su modelli/helper/logging, cache e concorrenza) con coverage 88% e soglia minima; task rake spec/rubocop  ( 2026-07-18 ) [ sphynx79]
+-  Task mise di progetto (bundle-prod, server dev/prod, test, coverage, lint, db-test) con script di copia bundle e avvio produzione  ( 2026-07-18 ) [ sphynx79]
 -  README con istruzioni di avvio sviluppo (mongod di test, puma, webpack dev server, spec)  ( 2026-07-18 ) [ sphynx79]
 
 
