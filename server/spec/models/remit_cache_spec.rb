@@ -22,6 +22,16 @@ RSpec.describe Remit do
     end
   end
 
+  describe 'warm-up attorno a oggi' do
+    it 'stampa e rilancia i fallimenti (la Promise li inghiottirebbe in silenzio)' do
+      allow(described_class).to receive(:refresh_cache_around_day).and_raise(Mongo::Error, 'pool esaurito')
+
+      expect {
+        expect { described_class.refresh_cache_around_today }.to raise_error(Mongo::Error)
+      }.to output(/Refresh cache remits FALLITO: Mongo::Error/).to_stdout
+    end
+  end
+
   describe 'thread-safety della cache (HIGH-006)' do
     it 'sotto accesso concorrente la stessa key viene fetchata una sola volta' do
       chiamate = Concurrent::AtomicFixnum.new(0)
