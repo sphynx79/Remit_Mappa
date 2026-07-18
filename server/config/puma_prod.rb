@@ -24,7 +24,12 @@ ssl_bind hostname, '443', {
 caddy_exe = ENV.fetch('CADDY_EXE', 'C:\APPL\caddy\caddy.exe')
 process = ChildProcess.build(caddy_exe, "-quiet", "-quic", "-conf", "CaddyfileProd_#{hostname}")
 process.cwd = '.\config'
-process.io.inherit!
+# output di Caddy su file, NON sulla console: con io.inherit! Caddy condivideva la
+# console e alla chiusura la lasciava in stato corrotto (input invisibile dopo Ctrl-C)
+caddy_log = File.open('log/caddy.log', 'a')
+caddy_log.sync = true
+process.io.stdout = caddy_log
+process.io.stderr = caddy_log
 process.leader = true
 process.start
 sleep 5
@@ -37,6 +42,7 @@ end
 # group separato, non riceve il Ctrl-C e resterebbe appeso alla console
 after_stopped do
   begin
+    puts 'Arresto: chiudo anche Caddy...'
     process.stop
   rescue StandardError
     nil
