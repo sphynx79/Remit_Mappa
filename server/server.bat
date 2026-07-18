@@ -45,8 +45,8 @@ SET conemu_exe=%CMDER_ROOT%\vendor\conemu-maximus5\ConEmu.exe
 SET conemu_ico=%CMDER_ROOT%\icons\cmder.ico
 SET conemu_cfgfile=%CMDER_ROOT%\config\ConEmu.xml
 SET conemu_init=%CMDER_ROOT%\vendor\init.bat
-SET bundle=C:\Ruby\bin\bundle.bat
-SET GEM_HOME=C:\Ruby\lib\ruby\gems\2.5.0
+:: bundle dal PATH (Ruby gestito da mise, niente piu GEM_HOME/C:\Ruby hardcoded)
+SET bundle=bundle
 SET argv=%*
 
 
@@ -55,10 +55,11 @@ IF NOT EXIST "%map_folder%" (
     ECHO %~n0: file not found - %map_folder% >&2
     EXIT /B 1
 )
-IF NOT EXIST "%bundle%" (
-    %extd% /messagebox Error "File %bundle% non trovato installare ruby" 16
+WHERE %bundle% >NUL 2>&1
+IF ERRORLEVEL 1 (
+    %extd% /messagebox Error "bundle non trovato nel PATH: installare Ruby via mise" 16
     EXIT /B 1
 )
 
-START %conemu_exe% /icon %conemu_ico% /title "Map"  /loadcfgfile %conemu_cfgfile% /cmd cmd /k "%conemu_init% && cd /D %MAP_FOLDER% && %bundle% exec puma -C .\config\puma_prod_wpws07133656.rb"
+START %conemu_exe% /icon %conemu_ico% /title "Map"  /loadcfgfile %conemu_cfgfile% /cmd cmd /k "%conemu_init% && cd /D %MAP_FOLDER% && %bundle% exec puma -C .\config\puma_prod.rb"
 
