@@ -65,3 +65,13 @@ run = "C:/Appl/Mongodb/bin/mongod.exe --dbpath E:/Desktop/Ampere/DB_test/data --
 [tasks.db-test-stop]
 description = "Arresto pulito del MongoDB di test (DB senza journal: mai kill brusco)"
 run = 'C:/Appl/Mongodb/bin/mongo.exe --port 27030 admin --eval "db.shutdownServer()"'
+
+# NB: bind anche su 127.0.0.1 oltre all'hostname: senza, MongoDB rifiuta lo
+# shutdownServer remoto e l'arresto pulito sarebbe impossibile
+[tasks.db-prod]
+description = "Avvia il MongoDB di PRODUZIONE su :27018 (dati E:/Desktop/Ampere/DB, journal attivo)"
+run = "C:/Appl/Mongodb/bin/mongod.exe --dbpath E:/Desktop/Ampere/DB/mongodata --port 27018 --bind_ip ENWS27719997,127.0.0.1 --logpath E:/Desktop/Ampere/DB/log/mongod.log"
+
+[tasks.db-prod-stop]
+description = "Arresto pulito del MongoDB di produzione"
+run = 'C:/Appl/Mongodb/bin/mongo.exe --port 27018 admin --eval "db.shutdownServer()"'
