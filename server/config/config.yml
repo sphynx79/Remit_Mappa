@@ -24,7 +24,10 @@ production:
   database:
     adress:
       # - '192.168.100.4:27018'
-      - '10.240.53.95:27018'
+      # hostname invece dell'IP fisso: il DB gira su ENWS27719997 e l'hostname
+      # risolve sempre all'IP corrente (LAN aziendale o hotspot)
+      - 'ENWS27719997:27018'
+      # - '10.240.53.95:27018'
       # - '127.0.0.1:27030'
       # - '10.130.96.220:27018'
       # - '10.130.96.220:27019'
