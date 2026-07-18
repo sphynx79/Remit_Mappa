@@ -5,14 +5,19 @@ class Remit < Mongodb
   # mattr :cache_remit
   cattr :cache
 
+  # inizializzazione al load della classe (non lazy in refresh_cache): nei primi
+  # secondi dopo il boot le richieste arrivano PRIMA del job di warm-up, e con
+  # @@cache nil andavano in 500. Concurrent::Map perche' letta/scritta da Puma,
+  # TimerTask e Parallel (HIGH-006)
+  @@cache            = Concurrent::Map.new
+  @@warmup_pendente  = Concurrent::Map.new
+  @@expiration_time  = 240
+
   class << self
 
     def refresh_cache(expiration_time: 240)
       # print "Refresh cache .......\n"
-      @@expiration_time ||= expiration_time
-      # Concurrent::Map: la cache è letta/scritta da Puma, dai TimerTask e da Parallel (HIGH-006)
-      @@cache ||= Concurrent::Map.new
-      @@warmup_pendente ||= Concurrent::Map.new
+      @@expiration_time = expiration_time
       Concurrent::Promise.new{refresh_cache_around_today}.then{delete_expired_key }.execute
     end
 

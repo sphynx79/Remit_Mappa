@@ -33,6 +33,16 @@ unless process.alive?
   exit
 end
 
+# allo stop di Puma (Ctrl-C compreso) termina anche Caddy: gira in un process
+# group separato, non riceve il Ctrl-C e resterebbe appeso alla console
+after_stopped do
+  begin
+    process.stop
+  rescue StandardError
+    nil
+  end
+end
+
 early_hints true
 environment "production"
 preload_app!
