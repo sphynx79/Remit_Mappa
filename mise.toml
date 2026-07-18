@@ -9,3 +9,59 @@
 python = "3.13"
 node = "lts"
 ruby = "4.0.1"
+
+# ---------------------------------------------------------------------------
+# Task di progetto: `mise tasks` per l'elenco, `mise run <task>` per eseguirli
+# ---------------------------------------------------------------------------
+
+[tasks.bundle-prod]
+description = "Build di produzione del client e copia in server/public"
+dir = "client"
+run = ["npm run build", "ruby ../script/copia_public.rb"]
+
+[tasks.server-dev]
+description = "API server di sviluppo su :9292 (servono MAPBOX_API_TOKEN e il mongod di test)"
+dir = "server"
+run = "bundle exec puma --port 9292"
+
+[tasks.client-dev]
+description = "Webpack dev server con hot reload su :9001"
+dir = "client"
+run = "npm run start"
+
+[tasks.server-prod]
+description = "Avvia Puma in produzione (config per-host se presente, altrimenti :9292)"
+run = "ruby script/avvia_prod.rb"
+
+[tasks.test]
+description = "Suite RSpec del server (richiede il mongod di test attivo su :27030)"
+dir = "server"
+run = "bundle exec rspec"
+
+[tasks.coverage]
+description = "Suite RSpec con report coverage (soglia minima 88%, report in server/coverage)"
+dir = "server"
+env = { RUN_COVERAGE_REPORT = "1" }
+run = "bundle exec rspec"
+
+[tasks.lint-server]
+description = "RuboCop sul server"
+dir = "server"
+run = "bundle exec rubocop"
+
+[tasks.lint-client]
+description = "ESLint sul client"
+dir = "client"
+run = "npx eslint src"
+
+[tasks.lint]
+description = "Lint completo (rubocop + eslint)"
+depends = ["lint-server", "lint-client"]
+
+[tasks.db-test]
+description = "Avvia il MongoDB di test su :27030 (snapshot locale, mai il DB di produzione)"
+run = "C:/Appl/Mongodb/bin/mongod.exe --dbpath E:/Desktop/Ampere/DB_test/data --port 27030 --bind_ip 127.0.0.1 --nojournal"
+
+[tasks.db-test-stop]
+description = "Arresto pulito del MongoDB di test (DB senza journal: mai kill brusco)"
+run = 'C:/Appl/Mongodb/bin/mongo.exe --port 27030 admin --eval "db.shutdownServer()"'
