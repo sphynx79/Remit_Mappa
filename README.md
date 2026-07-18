@@ -51,8 +51,10 @@ mise run test           # suite RSpec
 mise run coverage       # suite con report coverage (soglia 88%)
 mise run lint           # rubocop + eslint
 mise run bundle-prod    # build di produzione + copia in server/public
-mise run server-prod    # avvio produzione (config per-host se presente)
+mise run db-prod        # avvia il MongoDB di PRODUZIONE su :27018
+mise run server-prod    # avvio produzione (Puma SSL + Caddy, config unificata)
 mise run db-test-stop   # arresto pulito del MongoDB di test
+mise run db-prod-stop   # arresto pulito del MongoDB di produzione
 ```
 
 ## Test e lint
