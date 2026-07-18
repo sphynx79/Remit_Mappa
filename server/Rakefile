@@ -1,5 +1,10 @@
 # frozen_string_literal: true
 
+# bootstrap Bundler: consente `rake <task>` senza `bundle exec`
+# (gemme risolte dal Gemfile.lock di questo progetto)
+ENV['BUNDLE_GEMFILE'] ||= File.expand_path('Gemfile', __dir__)
+require 'bundler/setup'
+
 task :environment do
   ENV['RACK_ENV'] ||= ARGV[1] || 'development'
   ARGV.clear
@@ -21,6 +26,21 @@ end
 
 task c: :console
 task pry: :console
+
+# Avvio in FOREGROUND con Ctrl-C funzionante: Puma parte in-process (Puma::CLI),
+# la catena e' solo shell -> ruby, senza gli strati mise/cmd che su Windows
+# restano appesi dopo il Ctrl-C. Uso: cd server && bundle exec rake server_dev
+desc 'Avvia il server di sviluppo in foreground su :9292 (Ctrl-C per fermare)'
+task :server_dev do
+  require 'puma/cli'
+  Puma::CLI.new(['--port', '9292']).run
+end
+
+desc 'Avvia lo stack di produzione in foreground, Puma SSL + Caddy (Ctrl-C per fermare)'
+task :server_prod do
+  require 'puma/cli'
+  Puma::CLI.new(['-C', 'config/puma_prod.rb']).run
+end
 
 begin
   require 'rspec/core/rake_task'
