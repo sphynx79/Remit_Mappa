@@ -5,13 +5,24 @@ RSpec.describe Report do
     # Eccezione motivata alla regola "mai Date.today": il comportamento sotto test
     # dipende dalla distanza della data da oggi; le date correnti non hanno dati
     # nello snapshot e va bene così (value nil in cache)
-    it 'ogni miss su una data diversa innesca il proprio warm-up (MED-005)' do
+    it 'il warm-up parte al miss, uno alla volta per tipo, e si riarma a fine corsa (MED-005)' do
+      pendenti = described_class.class_variable_get(:@@warmup_pendente)
+      pendenti.delete(:centrali_tecnologia_daily)
       allow(Concurrent::ScheduledTask).to receive(:execute)
       key1 = (Date.today - 1).strftime('%d-%m-%Y')
       key2 = (Date.today - 2).strftime('%d-%m-%Y')
+      key3 = (Date.today - 3).strftime('%d-%m-%Y')
 
       described_class.get_remit(cache: true, type: :centrali_tecnologia_daily, data: key1)
       described_class.get_remit(cache: true, type: :centrali_tecnologia_daily, data: key2)
+
+      # il secondo miss trova il warm-up già pendente e NON ne accoda un altro
+      # (su cache fredda un range grande saturerebbe il pool Mongo)
+      expect(Concurrent::ScheduledTask).to have_received(:execute).once
+
+      # completamento simulato del warm-up: il prossimo miss lo riarma
+      pendenti.delete(:centrali_tecnologia_daily)
+      described_class.get_remit(cache: true, type: :centrali_tecnologia_daily, data: key3)
 
       expect(Concurrent::ScheduledTask).to have_received(:execute).twice
     end

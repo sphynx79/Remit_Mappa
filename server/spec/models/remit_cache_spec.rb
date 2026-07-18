@@ -13,6 +13,7 @@ RSpec.describe Remit do
     # Eccezione motivata alla regola "mai Date.today": il comportamento sotto test
     # dipende dalla distanza della data da oggi (value nil in cache, va bene così)
     it 'una data vicina a oggi innesca il warm-up' do
+      described_class.class_variable_get(:@@warmup_pendente).delete(:remit)
       allow(Concurrent::ScheduledTask).to receive(:execute)
 
       described_class.get_remit_centrali((Date.today - 3).strftime('%d-%m-%Y'))
