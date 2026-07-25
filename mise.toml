@@ -19,16 +19,21 @@ description = "Build di produzione del client e copia in server/public"
 dir = "client"
 run = ["npm run build", "ruby ../script/copia_public.rb"]
 
-# I server partono DETACHED (setsid nohup, log su file) e si fermano coi task
-# di stop: su Windows la catena mise/cmd resta appesa dopo il Ctrl-C dei task
-# foreground, lasciando il terminale inutilizzabile
+# Puma gira in FOREGROUND con i log a video. Su Windows la catena mise/cmd può
+# restare appesa dopo il Ctrl-C: in quel caso fermare da un'altra shell con
+# `mise run server-stop`, oppure usare i task rake (`rake server_prod`), che
+# lanciano Puma in-process. Per l'avvio detached resta `bash script/avvia_server.sh dev|prod`
 [tasks.server-dev]
-description = "Avvia in background l'API server di sviluppo su :9292 (log: server/log/puma_dev.log)"
-run = "bash script/avvia_server.sh dev"
+description = "Avvia l'API server di sviluppo su :9292 (foreground, log a video)"
+dir = "server"
+raw = true
+run = "bundle exec puma --port 9292"
 
 [tasks.server-prod]
-description = "Avvia in background lo stack di produzione, Puma SSL + Caddy (log: server/log/puma_prod.log)"
-run = "bash script/avvia_server.sh prod"
+description = "Avvia lo stack di produzione, Puma SSL + Caddy (foreground, log a video)"
+dir = "server"
+raw = true
+run = "bundle exec puma -C config/puma_prod.rb"
 
 [tasks.server-stop]
 description = "Ferma Puma (dev/prod) e Caddy"
@@ -65,9 +70,12 @@ run = "npx eslint src"
 description = "Lint completo (rubocop + eslint)"
 depends = ["lint-server", "lint-client"]
 
+# I due mongod girano in FOREGROUND con i log a video (nessun --logpath):
+# si fermano con Ctrl-C, che per mongod è un arresto pulito
 [tasks.db-test]
-description = "Avvia in background il MongoDB di test su :27030 (snapshot locale, mai il DB di produzione)"
-run = "bash script/avvia_db.sh test"
+description = "Avvia il MongoDB di test su :27030 (snapshot locale, mai il DB di produzione)"
+raw = true
+run = 'C:/Appl/Mongodb/bin/mongod.exe --dbpath E:\Sviluppo\Ampere\DB_test\data --port 27030 --bind_ip 127.0.0.1 --nojournal'
 
 [tasks.db-test-stop]
 description = "Arresto pulito del MongoDB di test (DB senza journal: mai kill brusco)"
@@ -76,8 +84,9 @@ run = 'C:/Appl/Mongodb/bin/mongo.exe --port 27030 admin --eval "db.shutdownServe
 # NB: bind anche su 127.0.0.1 oltre all'hostname: senza, MongoDB rifiuta lo
 # shutdownServer remoto e l'arresto pulito sarebbe impossibile
 [tasks.db-prod]
-description = "Avvia in background il MongoDB di PRODUZIONE su :27018 (dati E:/Desktop/Ampere/DB, journal attivo)"
-run = "bash script/avvia_db.sh prod"
+description = "Avvia il MongoDB di PRODUZIONE su :27018 (dati E:/Sviluppo/Ampere/DB, journal attivo)"
+raw = true
+run = 'C:/Appl/Mongodb/bin/mongod.exe --dbpath E:\Sviluppo\Ampere\DB\mongodata --port 27018 --bind_ip ENWS27719997,127.0.0.1'
 
 [tasks.db-prod-stop]
 description = "Arresto pulito del MongoDB di produzione"

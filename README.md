@@ -53,15 +53,17 @@ in produzione chiude anche Caddy, e la shell resta nella directory di partenza.
 
 ## Task mise (avvii in background e utilità)
 
-Definiti nel `mise.toml` di root (`mise tasks` per l'elenco). I server partono
-**detached** con log su file — su Windows i task mise in foreground restano
-appesi dopo il Ctrl-C, quindi per il foreground usare i task rake qui sopra:
+Definiti nel `mise.toml` di root (`mise tasks` per l'elenco). Database e server
+girano in **foreground** con i log a video. Su Windows il Ctrl-C può lasciare
+appesa la catena mise/cmd: in quel caso fermare da un'altra shell con i task
+`*-stop`, oppure usare i task rake qui sopra (Puma in-process, Ctrl-C pulito).
+Per l'avvio detached di Puma resta lo script `bash script/avvia_server.sh dev|prod`:
 
 ```
-mise run db-test        # MongoDB di test su :27030 (background)
-mise run db-prod        # MongoDB di PRODUZIONE su :27018 (background)
-mise run server-dev     # API server dev in background (log: server/log/puma_dev.log)
-mise run server-prod    # stack produzione in background (log: server/log/puma_prod.log)
+mise run db-test        # MongoDB di test su :27030 (foreground, log a video)
+mise run db-prod        # MongoDB di PRODUZIONE su :27018 (foreground, log a video)
+mise run server-dev     # API server dev su :9292 (foreground, log a video)
+mise run server-prod    # stack produzione, Puma SSL + Caddy (foreground, log a video)
 mise run server-stop    # ferma Puma (dev/prod) e Caddy
 mise run client-dev     # webpack dev server su :9001 (foreground)
 mise run test           # suite RSpec
