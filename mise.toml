@@ -84,7 +84,7 @@ depends = ["lint-server", "lint-client"]
 [tasks.db-test]
 description = "Avvia il MongoDB di test su :27030 (snapshot locale, mai il DB di produzione)"
 raw = true
-run = "{{ env.MONGOD_EXE }} --dbpath {{ env.MONGODB_AMPERE_DEVELOPMENT_PATH }} --port 27030 --bind_ip 127.0.0.1 --nojournal"
+run = "{{ env.MONGOD_EXE }} --config server/config/mongod.yaml --dbpath {{ env.MONGODB_AMPERE_DEVELOPMENT_PATH }} --port 27030 --bind_ip 127.0.0.1 --nojournal"
 
 [tasks.db-test-stop]
 description = "Arresto pulito del MongoDB di test (DB senza journal: mai kill brusco)"
@@ -95,7 +95,7 @@ run = '{{ env.MONGO_EXE }} --port 27030 admin --eval "db.shutdownServer()"'
 [tasks.db-prod]
 description = "Avvia il MongoDB di PRODUZIONE su :27018 (journal attivo)"
 raw = true
-run = "{{ env.MONGOD_EXE }} --dbpath {{ env.MONGODB_AMPERE_PATH }} --port 27018 --bind_ip ENWS27719997,127.0.0.1"
+run = "{{ env.MONGOD_EXE }} --config server/config/mongod.yaml --dbpath {{ env.MONGODB_AMPERE_PATH }} --port 27018 --bind_ip ENWS27719997,127.0.0.1"
 
 [tasks.db-prod-stop]
 description = "Arresto pulito del MongoDB di produzione"
