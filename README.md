@@ -74,6 +74,13 @@ mise run db-test-stop   # arresto pulito del MongoDB di test
 mise run db-prod-stop   # arresto pulito del MongoDB di produzione
 ```
 
+Percorsi ed eseguibili di MongoDB sono nella sezione `[env]` del `mise.toml`
+(`MONGODB_AMPERE_PATH`, `MONGODB_AMPERE_DEVELOPMENT_PATH`, `MONGOD_EXE`,
+`MONGO_EXE`): i valori sono i default di questo host e si sovrascrivono con una
+variabile d'ambiente o un `mise.local.toml` personale, senza toccare il file.
+Il tuning di WiredTiger comune ai due database sta invece in
+`server/config/mongod.yaml`.
+
 ## Test e lint
 
 ```
