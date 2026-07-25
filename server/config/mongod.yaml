@@ -1,0 +1,23 @@
+# Tuning di WiredTiger condiviso dai due mongod (produzione e sviluppo).
+#
+# Qui NON stanno percorsi, porta e bind: li passa mise da riga di comando
+# (variabili MONGODB_AMPERE_PATH / MONGODB_AMPERE_DEVELOPMENT_PATH), perche'
+# MongoDB 4.0 non espande le variabili d'ambiente nei file di configurazione.
+# Nemmeno systemLog: i due mongod girano in foreground con i log a video.
+#
+# Il journal e' attivo di default (produzione); il mongod di sviluppo lo
+# disattiva con --nojournal, quindi va sempre fermato con db-test-stop.
+storage:
+  engine: "wiredTiger"
+  wiredTiger:
+    engineConfig:
+      cacheSizeGB: 4
+      journalCompressor: none
+    collectionConfig:
+      blockCompressor: none
+    indexConfig:
+      prefixCompression: false
+setParameter:
+  enableLocalhostAuthBypass: false
+  # default 128: alzato per reggere il warm-up in parallelo delle cache
+  wiredTigerConcurrentReadTransactions: 256
