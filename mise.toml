@@ -50,6 +50,17 @@ dir = "server"
 raw = true
 run = "bundle exec puma -C config/puma_prod.rb"
 
+# REPL con l'applicazione gia' caricata (modelli, config, connessione al DB).
+# Ambiente: development di default, override con RACK_ENV=production mise run console
+[tasks.console]
+description = "Apre una console Ruby con l'app caricata (pry, altrimenti irb)"
+alias = ["c", "pry"]
+dir = "server"
+raw = true
+# senza RACK_ENV la classe Settings non trova la sezione di config.yml
+env = { RACK_ENV = "{{ env.RACK_ENV | default(value='development') }}" }
+run = "ruby -e \"require './server'; begin; require 'pry'; Pry.start; rescue LoadError; require 'irb'; IRB.start; end\""
+
 [tasks.server-stop]
 description = "Ferma Puma (dev/prod) e Caddy"
 run = "bash script/ferma_server.sh"
