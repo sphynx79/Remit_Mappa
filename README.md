@@ -39,29 +39,19 @@ MongoDB 4.0.x come server dati.
    npm run start
    ```
 
-## Avvio dei server in foreground (rake)
+## Task mise
 
-Dalla root del repo (o da `server/`), con Ctrl-C che ferma tutto in modo pulito:
-
-```
-rake server_dev         # sviluppo su http://localhost:9292
-rake server_prod        # produzione: Puma SSL :443 + Caddy → https://<hostname>:2015
-```
-
-Puma parte in-process dentro rake (catena shell → ruby): il Ctrl-C arriva diretto,
-in produzione chiude anche Caddy, e la shell resta nella directory di partenza.
-
-## Task mise (avvii in background e utilità)
-
-Definiti nel `mise.toml` di root (`mise tasks` per l'elenco). Database e server
-girano in **foreground** con i log a video. Su Windows il Ctrl-C può lasciare
-appesa la catena mise/cmd: in quel caso fermare da un'altra shell con i task
-`*-stop`, oppure usare i task rake qui sopra (Puma in-process, Ctrl-C pulito).
-Per l'avvio detached di Puma resta lo script `bash script/avvia_server.sh dev|prod`:
+Definiti nel `mise.toml` di root (`mise tasks` per l'elenco). Tutto gira in
+**foreground**: i server con i log a video, i due MongoDB con i log su file
+(`server/log/`). Il **Ctrl-C** ferma il processo e restituisce il prompt: i task
+girano in bash invece che nel `cmd /c` di default di Windows, che dopo il Ctrl-C
+chiedeva "Terminare il processo batch (S/N)?" e bloccava il terminale. Per
+l'avvio detached di Puma resta lo script `bash script/avvia_server.sh dev|prod`:
 
 ```
-mise run db-test        # MongoDB di test su :27030 (foreground, log a video)
-mise run db-prod        # MongoDB di PRODUZIONE su :27018 (foreground, log a video)
+mise run console        # REPL con l'app caricata (alias: mise run c, mise run pry)
+mise run db-test        # MongoDB di test su :27030 (log: server/log/mongod_dev.log)
+mise run db-prod        # MongoDB di PRODUZIONE su :27018 (log: server/log/mongod_prod.log)
 mise run server-dev     # API server dev su :9292 (foreground, log a video)
 mise run server-prod    # stack produzione, Puma SSL + Caddy (foreground, log a video)
 mise run server-stop    # ferma Puma (dev/prod) e Caddy
@@ -78,8 +68,8 @@ Percorsi ed eseguibili di MongoDB sono nella sezione `[env]` del `mise.toml`
 (`MONGODB_AMPERE_PATH`, `MONGODB_AMPERE_DEVELOPMENT_PATH`, `MONGOD_EXE`,
 `MONGO_EXE`): i valori sono i default di questo host e si sovrascrivono con una
 variabile d'ambiente o un `mise.local.toml` personale, senza toccare il file.
-Il tuning di WiredTiger comune ai due database sta invece in
-`server/config/mongod.yaml`.
+La configurazione dei due database (journal, tuning di WiredTiger, file di log)
+sta invece in `server/config/mongod_prod.yaml` e `server/config/mongod_dev.yaml`.
 
 ## Test e lint
 
@@ -87,7 +77,6 @@ Il tuning di WiredTiger comune ai due database sta invece in
 cd server
 bundle exec rspec                        # suite (serve il mongod di test attivo)
 RUN_COVERAGE_REPORT=1 bundle exec rspec  # con coverage (report in coverage/, soglia minima 88%)
-bundle exec rake                         # alias di rspec
 bundle exec rubocop                      # lint Ruby
 
 cd client
@@ -95,5 +84,5 @@ cd client
 npm run build                            # bundle di produzione (output in client/dist)
 ```
 
-Console di sviluppo del server: `cd server && rake console` (Pry; il Rakefile carica
-da solo il contesto Bundler, `bundle exec` non serve).
+Console di sviluppo del server: `mise run console` (Pry con l'app caricata; per la
+produzione `RACK_ENV=production mise run console`).
