@@ -10,6 +10,13 @@ python = "3.13"
 node = "lts"
 ruby = "4.0.1"
 
+# I task girano in bash invece che nel `cmd /c` di default. Con cmd, il Ctrl-C
+# su un task in foreground fa comparire la richiesta "Terminare il processo
+# batch (S/N)?": il processo si ferma ma cmd resta in attesa di una risposta e
+# il terminale diventa inutilizzabile. Con bash il Ctrl-C arriva pulito.
+[settings]
+windows_default_inline_shell_args = "bash -c"
+
 # Percorsi della macchina: i valori qui sotto sono solo i default di questo host.
 # Si sovrascrivono da fuori, senza toccare questo file, con una variabile
 # d'ambiente oppure con un `mise.local.toml` personale (ha la precedenza).
@@ -28,10 +35,9 @@ description = "Build di produzione del client e copia in server/public"
 dir = "client"
 run = ["npm run build", "ruby ../script/copia_public.rb"]
 
-# Puma gira in FOREGROUND con i log a video. Su Windows la catena mise/cmd può
-# restare appesa dopo il Ctrl-C: in quel caso fermare da un'altra shell con
-# `mise run server-stop`, oppure usare i task rake (`rake server_prod`), che
-# lanciano Puma in-process. Per l'avvio detached resta `bash script/avvia_server.sh dev|prod`
+# Puma gira in FOREGROUND con i log a video: il Ctrl-C lo ferma e restituisce
+# il prompt (vedi la nota su [settings] in testa al file). Per l'avvio detached
+# resta `bash script/avvia_server.sh dev|prod`
 [tasks.server-dev]
 description = "Avvia l'API server di sviluppo su :9292 (foreground, log a video)"
 dir = "server"
