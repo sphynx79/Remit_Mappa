@@ -1,0 +1,37 @@
+# Configurazione del mongod di PRODUZIONE.
+#
+# Qui NON sta solo il percorso dei dati: lo passa mise da riga di comando
+# (variabile MONGODB_AMPERE_PATH), perche' MongoDB 4.0 non espande le variabili
+# d'ambiente nei file di configurazione.
+#
+# I percorsi relativi sono risolti rispetto alla directory da cui parte mongod,
+# che per i task mise e' sempre la root del repo.
+systemLog:
+  destination: file
+  path: server/log/mongod_prod.log
+  logAppend: false
+  timeStampFormat: "iso8601-local"
+net:
+  # bind anche su 127.0.0.1 oltre all'hostname: senza, MongoDB rifiuta lo
+  # shutdownServer da locale e l'arresto pulito sarebbe impossibile
+  bindIp: ENWS27719997,127.0.0.1
+  port: 27018
+#replication:
+#   oplogSizeMB: 24000
+#   replSetName: ampere
+storage:
+  journal:
+    enabled: true
+  engine: "wiredTiger"
+  wiredTiger:
+    engineConfig:
+      cacheSizeGB: 4
+      journalCompressor: none
+    collectionConfig:
+      blockCompressor: none
+    indexConfig:
+      prefixCompression: false
+setParameter:
+  enableLocalhostAuthBypass: false
+  # default 128: alzato per reggere il warm-up in parallelo delle cache
+  wiredTigerConcurrentReadTransactions: 256

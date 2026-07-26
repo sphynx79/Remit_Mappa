@@ -1,0 +1,32 @@
+# Configurazione del mongod di SVILUPPO (snapshot locale).
+#
+# Qui NON sta solo il percorso dei dati: lo passa mise da riga di comando
+# (variabile MONGODB_AMPERE_DEVELOPMENT_PATH), perche' MongoDB 4.0 non espande
+# le variabili d'ambiente nei file di configurazione.
+#
+# Journal DISATTIVO (snapshot riproducibile, scritture piu' veloci): questo
+# mongod va sempre fermato con `mise run db-test-stop`, mai con un kill brusco.
+systemLog:
+  destination: file
+  path: server/log/mongod_dev.log
+  logAppend: false
+  timeStampFormat: "iso8601-local"
+net:
+  bindIp: 127.0.0.1
+  port: 27030
+storage:
+  journal:
+    enabled: false
+  engine: "wiredTiger"
+  wiredTiger:
+    engineConfig:
+      cacheSizeGB: 4
+      journalCompressor: none
+    collectionConfig:
+      blockCompressor: none
+    indexConfig:
+      prefixCompression: false
+setParameter:
+  enableLocalhostAuthBypass: false
+  # default 128: alzato per reggere il warm-up in parallelo delle cache
+  wiredTigerConcurrentReadTransactions: 256
