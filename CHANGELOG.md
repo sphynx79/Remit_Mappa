@@ -1,3 +1,21 @@
+## 1.9.1 (2026-07-26)
+### Fixed
+-  Task mise: il Ctrl-C ferma il processo e restituisce il prompt; i task girano in bash invece del `cmd /c` di Windows, che restava in attesa della risposta a "Terminare il processo batch (S/N)?" e bloccava il terminale  ( 2026-07-26 ) [ sphynx79]
+-  Task mise dei database: percorsi dei dati corretti dopo lo spostamento delle cartelle in E:/Sviluppo/Ampere, prima puntavano a un percorso inesistente  ( 2026-07-26 ) [ sphynx79]
+### Security
+-  Client: aggiornate svgo 4.0.2, fast-uri 3.1.4 e brace-expansion 5.0.8, tre vulnerabilita' di gravita' alta su dipendenze transitive (script eseguibili non rimossi, host confusion, denial of service)  ( 2026-07-26 ) [ sphynx79]
+### Added
+-  Task mise `console` (alias `c` e `pry`): REPL con l'applicazione caricata, ambiente selezionabile con RACK_ENV  ( 2026-07-26 ) [ sphynx79]
+-  Configurazione MongoDB per ambiente in server/config/mongod_prod.yaml e mongod_dev.yaml: journal esplicito, tuning WiredTiger e log su file in server/log  ( 2026-07-26 ) [ sphynx79]
+### Updated
+-  Task mise: database e server partono in foreground, i server con i log a video e i database su file; percorsi ed eseguibili di MongoDB da variabili d'ambiente sovrascrivibili senza modificare il mise.toml  ( 2026-07-26 ) [ sphynx79]
+-  Client: dipendenze aggiornate, webpack 5.108.4, eslint 10.7.0, webpack-dev-server 6.0.0 (major verificato: nessuna opzione rimossa era in uso)  ( 2026-07-26 ) [ sphynx79]
+### Removed
+-  Rakefile (root e server/) e gem rake: avvii, suite, lint e console sono ora task mise, nessuna gem del progetto dipendeva da rake  ( 2026-07-26 ) [ sphynx79]
+-  Script script/avvia_db.sh: i due mongod si avviano direttamente dai task mise  ( 2026-07-26 ) [ sphynx79]
+
+
+
 ## 1.9.0 (2026-07-18)
 ### Fixed
 -  Server: JSON valido ("[]") sui report in cache con date senza dati, prima usciva "[,,,,]" non parsabile [HIGH-001]  ( 2026-07-18 ) [ sphynx79]
