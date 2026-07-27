@@ -1,3 +1,9 @@
+## 1.9.2 (2026-07-27)
+### Updated
+-  README riscritto: indice, stack tecnologico, architettura di produzione e sviluppo, ciclo di una richiesta API con cache, struttura del client, prerequisiti, variabili d'ambiente, task mise di riferimento, test, lint e troubleshooting  ( 2026-07-27 ) [ sphynx79]
+
+
+
 ## 1.9.1 (2026-07-26)
 ### Fixed
 -  Task mise: il Ctrl-C ferma il processo e restituisce il prompt; i task girano in bash invece del `cmd /c` di Windows, che restava in attesa della risposta a "Terminare il processo batch (S/N)?" e bloccava il terminale  ( 2026-07-26 ) [ sphynx79]
